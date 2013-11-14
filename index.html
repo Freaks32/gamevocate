@@ -8,6 +8,30 @@
 <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
 <link type="text/css" rel="stylesheet" href="css/custom.css" />
 
+<script type="text/javascript">
+$(document).ready(function() {
+	var params = {};
+	params['type'] = "query_game";
+	$.post("php/query.php",
+		params,
+		function(response) {
+			var html = "";
+			var result = $.parseJSON(response);
+			for(var i = 0; i < result.length; i++) {
+				html += "<div class=\"game-container\">";
+				html += "<div class=\"game-pic-container\">";
+				html += "<img class=\"game-pic\" src=\"" + result[i]["image"] + "\"></img>";
+				html += "<div class=\"game-title-container\">";
+				html += result[i]["title"];
+				html += "</div>";
+				html += "</div>";
+				html += "</div>";
+			}
+			$(".content-container").html(html);
+		});
+});
+</script>
+
 <title>Social Game Revew & Suggestion Site</title>
 </head>
 <body>
@@ -53,7 +77,7 @@
 		</div>
 	</div>
 </div>
-<div class="game-container black">
+<div class="game-container">
 	<div class="game-pic-container">
 		<img class="game-pic" src="http://cdn.steampowered.com/v/gfx/apps/105600/header.jpg" />
 		<div class="game-title-container">
@@ -61,7 +85,7 @@
 		</div>
 	</div>
 </div>
-<div class="game-container black">
+<div class="game-container">
 	<div class="game-pic-container">
 		<img class="game-pic" src="http://cdn.steampowered.com/v/gfx/apps/72850/header.jpg" />
 		<div class="game-title-container">
@@ -69,7 +93,7 @@
 		</div>
 	</div>
 </div>
-<div class="game-container black">
+<div class="game-container">
 	<div class="game-pic-container">
 		<img class="game-pic" src="http://cdn.steampowered.com/v/gfx/apps/242050/header.jpg" />
 		<div class="game-title-container">
@@ -77,7 +101,7 @@
 		</div>
 	</div>
 </div>
-<div class="game-container black">
+<div class="game-container">
 	<div class="game-pic-container">
 		<img class="game-pic" src="http://cdn.steampowered.com/v/gfx/apps/209160/header.jpg" />
 		<div class="game-title-container">
