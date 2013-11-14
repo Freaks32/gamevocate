@@ -32,16 +32,6 @@ CREATE TABLE `Classes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Classes`
---
-
-LOCK TABLES `Classes` WRITE;
-/*!40000 ALTER TABLE `Classes` DISABLE KEYS */;
-INSERT INTO `Classes` VALUES (1,'Normal User',0),(2,'Administrator',1);
-/*!40000 ALTER TABLE `Classes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `GameByStudio`
 --
 
@@ -59,16 +49,6 @@ CREATE TABLE `GameByStudio` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `GameByStudio`
---
-
-LOCK TABLES `GameByStudio` WRITE;
-/*!40000 ALTER TABLE `GameByStudio` DISABLE KEYS */;
-INSERT INTO `GameByStudio` VALUES (1,1);
-/*!40000 ALTER TABLE `GameByStudio` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `GameOfGenre`
 --
 
@@ -84,15 +64,6 @@ CREATE TABLE `GameOfGenre` (
   CONSTRAINT `GameOfGenre_ibfk_2` FOREIGN KEY (`genrekey`) REFERENCES `Genres` (`genrekey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `GameOfGenre`
---
-
-LOCK TABLES `GameOfGenre` WRITE;
-/*!40000 ALTER TABLE `GameOfGenre` DISABLE KEYS */;
-/*!40000 ALTER TABLE `GameOfGenre` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Games`
@@ -113,16 +84,6 @@ CREATE TABLE `Games` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Games`
---
-
-LOCK TABLES `Games` WRITE;
-/*!40000 ALTER TABLE `Games` DISABLE KEYS */;
-INSERT INTO `Games` VALUES (1,'Team Fortress 2','Free-to-Play First Person Shooter and Hat Collection Simulator',440,NULL),(2,'Left 4 Dead 2','Zombie Apocalypse First Person Co-op Shooter',550,4.5),(3,'Assassin\'s Creed IV: Black Flag','First Person Shooter',242050,NULL),(4,'Call of Duty: Ghosts','',209160,2);
-/*!40000 ALTER TABLE `Games` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Genres`
 --
 
@@ -137,15 +98,6 @@ CREATE TABLE `Genres` (
   UNIQUE KEY `genrekey` (`genrekey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Genres`
---
-
-LOCK TABLES `Genres` WRITE;
-/*!40000 ALTER TABLE `Genres` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Genres` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Reviews`
@@ -167,16 +119,6 @@ CREATE TABLE `Reviews` (
   CONSTRAINT `Reviews_ibfk_2` FOREIGN KEY (`userkey`) REFERENCES `Users` (`userkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Reviews`
---
-
-LOCK TABLES `Reviews` WRITE;
-/*!40000 ALTER TABLE `Reviews` DISABLE KEYS */;
-INSERT INTO `Reviews` VALUES (1,2,NULL,NULL,5,'2013-11-13 23:38:44'),(2,2,NULL,NULL,5,'2013-11-14 17:40:49'),(4,3,NULL,NULL,2,'2013-11-14 17:54:16');
-/*!40000 ALTER TABLE `Reviews` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -249,16 +191,6 @@ CREATE TABLE `Studios` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Studios`
---
-
-LOCK TABLES `Studios` WRITE;
-/*!40000 ALTER TABLE `Studios` DISABLE KEYS */;
-INSERT INTO `Studios` VALUES (1,'Valve','Bellevue, Washington');
-/*!40000 ALTER TABLE `Studios` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `UserLikesGenre`
 --
 
@@ -275,15 +207,6 @@ CREATE TABLE `UserLikesGenre` (
   CONSTRAINT `UserLikesGenre_ibfk_2` FOREIGN KEY (`userkey`) REFERENCES `Users` (`userkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `UserLikesGenre`
---
-
-LOCK TABLES `UserLikesGenre` WRITE;
-/*!40000 ALTER TABLE `UserLikesGenre` DISABLE KEYS */;
-/*!40000 ALTER TABLE `UserLikesGenre` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Users`
@@ -303,16 +226,6 @@ CREATE TABLE `Users` (
   CONSTRAINT `Users_ibfk_1` FOREIGN KEY (`classkey`) REFERENCES `Classes` (`classkey`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Users`
---
-
-LOCK TABLES `Users` WRITE;
-/*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (2,2,'Freaks32'),(3,1,'Debug User');
-/*!40000 ALTER TABLE `Users` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -323,4 +236,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-14 10:03:29
+-- Dump completed on 2013-11-14 10:39:48
