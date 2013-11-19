@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.34, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.31, for debian-linux-gnu (armv7l)
 --
 -- Host: localhost    Database: gamevocate
 -- ------------------------------------------------------
--- Server version	5.5.34-0ubuntu0.13.10.1
+-- Server version	5.5.31-0+wheezy1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS `Classes`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Classes` (
   `classkey` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(128) DEFAULT NULL,
-  `permissions` int(11) DEFAULT NULL,
+  `c_name` char(128) DEFAULT NULL,
+  `c_permissions` int(11) DEFAULT NULL,
   PRIMARY KEY (`classkey`),
   UNIQUE KEY `classkey` (`classkey`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
@@ -74,13 +74,13 @@ DROP TABLE IF EXISTS `Games`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Games` (
   `gamekey` int(11) NOT NULL AUTO_INCREMENT,
-  `game_title` char(128) NOT NULL,
-  `game_description` varchar(1024) DEFAULT NULL,
-  `game_steam_appid` int(11) DEFAULT NULL,
-  `avg_rating` float DEFAULT NULL,
+  `g_title` char(128) NOT NULL DEFAULT '',
+  `g_description` varchar(1024) DEFAULT NULL,
+  `g_steamappid` int(11) DEFAULT NULL,
+  `g_avgrating` float DEFAULT NULL,
   PRIMARY KEY (`gamekey`),
   UNIQUE KEY `gamekey` (`gamekey`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,11 +92,11 @@ DROP TABLE IF EXISTS `Genres`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Genres` (
   `genrekey` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(32) NOT NULL,
-  `description` varchar(1024) DEFAULT NULL,
+  `ge_name` char(32) NOT NULL DEFAULT '',
+  `ge_description` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`genrekey`),
   UNIQUE KEY `genrekey` (`genrekey`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,10 +109,10 @@ DROP TABLE IF EXISTS `Reviews`;
 CREATE TABLE `Reviews` (
   `gamekey` int(11) NOT NULL,
   `userkey` int(11) NOT NULL,
-  `review_title` char(128) DEFAULT NULL,
-  `review_body` varchar(2048) DEFAULT NULL,
-  `review_rating` int(11) NOT NULL,
-  `review_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `r_title` char(128) DEFAULT NULL,
+  `r_body` varchar(2048) DEFAULT NULL,
+  `r_rating` int(11) NOT NULL,
+  `r_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`gamekey`,`userkey`),
   KEY `userkey` (`userkey`),
   CONSTRAINT `Reviews_ibfk_1` FOREIGN KEY (`gamekey`) REFERENCES `Games` (`gamekey`),
@@ -128,9 +128,9 @@ CREATE TABLE `Reviews` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER games_update_avg_rating_insert AFTER INSERT ON Reviews
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER games_update_avgrating_insert AFTER INSERT ON Reviews
 FOR EACH ROW BEGIN
-UPDATE Games SET avg_rating = (SELECT AVG(review_rating) FROM Reviews WHERE gamekey = NEW.gamekey) WHERE gamekey = NEW.gamekey;
+UPDATE Games SET g_avgrating = (SELECT AVG(r_rating) FROM Reviews WHERE gamekey = NEW.gamekey) WHERE gamekey = NEW.gamekey;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -146,9 +146,9 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER games_update_avg_rating_update AFTER UPDATE ON Reviews
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER games_update_avgrating_update AFTER UPDATE ON Reviews
 FOR EACH ROW BEGIN
-UPDATE Games SET avg_rating = (SELECT AVG(review_rating) FROM Reviews where gamekey = NEW.gamekey) where gamekey = NEW.gamekey;
+UPDATE Games SET g_avgrating = (SELECT AVG(r_rating) FROM Reviews WHERE gamekey = NEW.gamekey) WHERE gamekey = NEW.gamekey;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -164,9 +164,9 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER games_update_avg_rating_delete AFTER DELETE ON Reviews
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER games_update_avgrating_delete AFTER DELETE ON Reviews
 FOR EACH ROW BEGIN
-UPDATE Games SET avg_rating = (SELECT AVG(review_rating) FROM Reviews WHERE gamekey = OLD.gamekey) where gamekey = OLD.gamekey;
+UPDATE Games SET g_avgrating = (SELECT AVG(r_rating) FROM Reviews WHERE gamekey = OLD.gamekey) WHERE gamekey = OLD.gamekey;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -183,11 +183,11 @@ DROP TABLE IF EXISTS `Studios`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Studios` (
   `studkey` int(11) NOT NULL AUTO_INCREMENT,
-  `name` char(128) DEFAULT NULL,
-  `location` char(128) DEFAULT NULL,
+  `s_name` char(128) DEFAULT NULL,
+  `s_location` char(128) DEFAULT NULL,
   PRIMARY KEY (`studkey`),
   UNIQUE KEY `studkey` (`studkey`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -200,7 +200,7 @@ DROP TABLE IF EXISTS `UserLikesGenre`;
 CREATE TABLE `UserLikesGenre` (
   `userkey` int(11) NOT NULL,
   `genrekey` int(11) NOT NULL,
-  `like_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `l_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`userkey`,`genrekey`),
   KEY `genrekey` (`genrekey`),
   CONSTRAINT `UserLikesGenre_ibfk_1` FOREIGN KEY (`genrekey`) REFERENCES `Genres` (`genrekey`),
@@ -218,13 +218,13 @@ DROP TABLE IF EXISTS `Users`;
 CREATE TABLE `Users` (
   `userkey` int(11) NOT NULL AUTO_INCREMENT,
   `classkey` int(11) NOT NULL,
-  `username` char(128) NOT NULL,
+  `u_username` char(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`userkey`),
   UNIQUE KEY `userkey` (`userkey`),
-  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `username` (`u_username`),
   KEY `classkey` (`classkey`),
   CONSTRAINT `Users_ibfk_1` FOREIGN KEY (`classkey`) REFERENCES `Classes` (`classkey`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1338 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -236,4 +236,4 @@ CREATE TABLE `Users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-14 10:39:48
+-- Dump completed on 2013-11-18 16:45:47
