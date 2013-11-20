@@ -1,0 +1,35 @@
+<html>
+<head>
+<title>Post Query Debug</title>
+</head>
+<body>
+<script type="text/javascript" src="js/jquery-2.0.3.js"></script>
+<script type="text/javascript">
+function postQuery(querytype) {
+	var array = {};
+	array['type'] = querytype;
+	$.post("php/query.php",
+		array,
+		function(response) {
+			$("#response").html(response);
+		});
+}
+$(document).ready(function() {
+	$("#queryform").submit(function(event) {
+		var qtype = $("[name='qtype']").val();
+		postQuery(qtype);
+		event.preventDefault();
+	});
+});
+</script>
+<div id="input">
+<form id="queryform">
+<label>Type:</label><input type="text" name="qtype" /><br />
+<input type="submit" value="Go!" />
+</form>
+</div>
+<div id="response" style="border-style:solid;">
+Response text will appear here.
+</div>
+</body>
+</html>
