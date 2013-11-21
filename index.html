@@ -8,6 +8,9 @@
 <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
 <link type="text/css" rel="stylesheet" href="css/custom.css" />
 
+<style type="text/css">
+</style>
+
 <script type="text/javascript">
 $(document).ready(function() {
 	var params = {};
@@ -23,6 +26,10 @@ $(document).ready(function() {
 				html += "<img class=\"game-pic\" src=\"" + result[i]["image"] + "\"></img>";
 				html += "<div class=\"game-title-container\">";
 				html += result[i]["title"];
+				html += "</div>";
+				html += "<div class=\"game-rating-container\">";
+				html += "<div class=\"game-rating\"><div class=\"game-rating-mask\" style=\"width:50%\"></div></div>";
+				/*html += "<img class=\"game-rating\" src=\"images/ratings.png\"></img>";*/
 				html += "</div>";
 				html += "</div>";
 				html += "</div>";
