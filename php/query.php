@@ -1,8 +1,8 @@
 <?php
 
-error_reporting(E_ALL); 
+//error_reporting(E_ALL); 
 //error_reporting(E_ALL & ~E_NOTICE | E_STRICT); // Warns on good coding standards
-ini_set("display_errors", "1");
+//ini_set("display_errors", "1");
 
 require_once('db.php');
 
@@ -20,7 +20,7 @@ if($_POST) {
 				if($g_steamappid) {
 					$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
 				} else {
-					$g_image = "";
+					$g_image = "images/noimage.png";
 				}
 				$games[$i++] = array(	"title"=>$g_title,
 						 	"description"=>$g_description,
