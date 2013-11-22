@@ -13,6 +13,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	/* Test Code, Load from Database */
 	var params = {};
 	params['type'] = "query_game";
 	$.post("php/query.php",
@@ -22,15 +23,16 @@ $(document).ready(function() {
 			var result = $.parseJSON(response);
 			for(var i = 0; i < result.length; i++) {
 				html += "<div class=\"game-container\">";
-				html += "<div class=\"game-pic-container\">";
+				html += "<div class=\"game-header-container\">";
 				html += "<img class=\"game-pic\" src=\"" + result[i]["image"] + "\"></img>";
 				html += "<div class=\"game-title-container\">";
 				html += result[i]["title"];
 				html += "</div>";
 				html += "<div class=\"game-rating-container\">";
-				html += "<div class=\"game-rating\"><div class=\"game-rating-mask\" style=\"width:50%\"></div></div>";
-				/*html += "<img class=\"game-rating\" src=\"images/ratings.png\"></img>";*/
+				html += "<div class=\"game-rating\"></div>";
 				html += "</div>";
+				html += "</div>";
+				html += "<div class=\"game-body-container\">";
 				html += "</div>";
 				html += "</div>";
 			}
@@ -75,47 +77,6 @@ $(document).ready(function() {
 </div>
 
 <div class="content-container">
-
-<div class="game-container">
-	<div class="game-pic-container">
-		<img class="game-pic" src="http://cdn.steampowered.com/v/gfx/apps/440/header.jpg" />
-		<div class="game-title-container">
-			Team Fortress 2
-		</div>
-	</div>
-</div>
-<div class="game-container">
-	<div class="game-pic-container">
-		<img class="game-pic" src="http://cdn.steampowered.com/v/gfx/apps/105600/header.jpg" />
-		<div class="game-title-container">
-			Terraria
-		</div>
-	</div>
-</div>
-<div class="game-container">
-	<div class="game-pic-container">
-		<img class="game-pic" src="http://cdn.steampowered.com/v/gfx/apps/72850/header.jpg" />
-		<div class="game-title-container">
-			The Elder Scrools V: Skyrim
-		</div>
-	</div>
-</div>
-<div class="game-container">
-	<div class="game-pic-container">
-		<img class="game-pic" src="http://cdn.steampowered.com/v/gfx/apps/242050/header.jpg" />
-		<div class="game-title-container">
-			Assassin's Creed IV: Black Flag
-		</div>
-	</div>
-</div>
-<div class="game-container">
-	<div class="game-pic-container">
-		<img class="game-pic" src="http://cdn.steampowered.com/v/gfx/apps/209160/header.jpg" />
-		<div class="game-title-container">
-			Call of Duty: Ghosts
-		</div>
-	</div>
-</div>
 </div>
 </body>
 </html>
