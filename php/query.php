@@ -6,29 +6,48 @@
 
 require_once('db.php');
 
+$result = array();
 $mysqli = dbconnect();
 
 if($_POST) {
 	switch($_POST['type']) {
-	case 'query_game':
-		if($query = $mysqli->prepare("select g_title, g_description, g_steamappid from Games")) {
+	case 'query_games':
+		$games = array();
+		if($query = $mysqli->prepare("select gamekey, g_title, g_description, g_steamappid, g_avgrating from Games")) {
 			$query->execute();
-			$query->bind_result($g_title, $g_description, $g_steamappid);
+			$query->bind_result($gamekey, $g_title, $g_description, $g_steamappid, $g_avgrating);
 			$i = 0;
-			$games = array();
 			while($query->fetch()) {
 				if($g_steamappid) {
 					$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
 				} else {
 					$g_image = "images/noimage.png";
 				}
-				$games[$i++] = array(	"title"=>$g_title,
+				$games[$i++] = array(	"gamekey"=>$gamekey,
+							"title"=>$g_title,
 						 	"description"=>$g_description,
-							"image"=>$g_image);
+							"image"=>$g_image,
+							"avgrating"=>$g_avgrating);
 			}
 			$query->close();
 		}
-		echo json_encode($games);
+		$result["games"] = $games;
+		echo json_encode($result);
+		break;
+	case 'query_gameinfo':
+		$gameid = $_POST['gamekey'];
+		$gameinfo = array();
+		if($query = $mysqli->prepare("select g_title from Games where gamekey = ?")) {
+			$query->bind_param("i", $gameid);
+			$query->execute();
+			$query->bind_result($g_title);
+			while($query->fetch()) {
+				$gameinfo["title"] = $g_title;
+			}
+			$query->close();
+		}
+		$result["gameinfo"] = $gameinfo;
+		echo json_encode($result);
 		break;
 	default:
 		die("Unknown Query Type");

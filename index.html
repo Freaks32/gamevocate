@@ -15,36 +15,66 @@
 $(document).ready(function() {
 	/* Test Code, Load from Database */
 	var params = {};
-	params['type'] = "query_game";
+	params['type'] = "query_games";
 	$.post("php/query.php",
 		params,
 		function(response) {
 			var html = "";
 			var result = $.parseJSON(response);
-			for(var i = 0; i < result.length; i++) {
+			console.log(result);
+			for(var i = 0; i < result["games"].length; i++) {
+				var ratingmaskwidth = 100 - (result["games"][i]["avgrating"] * 20.0);
+				html += "<a href=\"#\" onclick=\"viewGame(" + result["games"][i]["gamekey"] + ")\"";
 				html += "<div class=\"game-container\">";
 				html += "<div class=\"game-header-container\">";
-				html += "<img class=\"game-pic\" src=\"" + result[i]["image"] + "\"></img>";
+				html += "<img class=\"game-pic\" src=\"" + result["games"][i]["image"] + "\"></img>";
 				html += "<div class=\"game-title-container\">";
-				html += result[i]["title"];
+				html += result["games"][i]["title"];
 				html += "</div>";
 				html += "<div class=\"game-rating-container\">";
-				html += "<div class=\"game-rating\"></div>";
+				html += "<div class=\"game-rating\" style=\"padding-right:" + ratingmaskwidth + "%\"></div>";
 				html += "</div>";
 				html += "</div>";
 				html += "<div class=\"game-body-container\">";
+				html += result["games"][i]["description"];
 				html += "</div>";
 				html += "</div>";
+				html += "</a>";
 			}
-			$(".content-container").html(html);
+			$(".game-list-container").html(html);
+			$(".loading").addClass("hidden");
 		});
 });
+
+function viewGame(id) {
+	$(".loading").removeClass("hidden");
+	var params = {};
+	params['type'] = "query_gameinfo";
+	params['gamekey'] = id;
+	$.post("php/query.php",
+		params,
+		function(response) {
+			var html = "";
+			var result = $.parseJSON(response);
+			console.log(result);
+			html += result["gameinfo"]["title"];
+			$(".game-view-container").html(html);
+			$(".game-list-container").addClass("hidden");
+			$(".game-view-container").removeClass("hidden");
+			$(".loading").addClass("hidden");
+		});
+}
+
+function closeGame() {
+	$(".game-view-container").addClass("hidden");
+	$(".game-list-container").removeClass("hidden");
+}
 </script>
 
 <title>Social Game Revew & Suggestion Site</title>
 </head>
 <body>
-<div class="navbar navbar-default navbar-static-top">
+<div class="navbar navbar-default navbar-fixed-top">
 	<div class="navbar-header">
 		<div class="navbar-brand">
 			GameVocate
@@ -75,8 +105,17 @@ $(document).ready(function() {
 	</ul>
 	-->
 </div>
-
-<div class="content-container">
+<div class="body-container">
+	<div class="content-container">
+		<div class="game-list-container">
+		</div>
+		<div class="game-view-container hidden">
+		</div>
+	</div>
+</div>
+<div class="loading">
+	<div class="loading-circle-container">
+	</div>
 </div>
 </body>
 </html>

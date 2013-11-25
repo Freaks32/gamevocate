@@ -3602,6 +3602,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .navbar {
   position: relative;
   min-height: 35;
+  height: 35;
   margin-bottom: 0px;
   border: 1px solid transparent;
 }
