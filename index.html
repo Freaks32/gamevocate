@@ -4,6 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 <script type="text/javascript" src="js/jquery-2.0.3.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.10.3.custom.js"></script>
 <script type="text/javascript" src="js/bootstrap.js"></script>
 <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
 <link type="text/css" rel="stylesheet" href="css/custom.css" />
@@ -24,22 +25,26 @@ $(document).ready(function() {
 			console.log(result);
 			for(var i = 0; i < result["games"].length; i++) {
 				var ratingmaskwidth = 100 - (result["games"][i]["avgrating"] * 20.0);
-				html += "<a href=\"#\" onclick=\"viewGame(" + result["games"][i]["gamekey"] + ")\"";
+				var gamelinkstart = "<a href=\"#\" onclick=\"viewGame(" + result["games"][i]["gamekey"] + ")\">";
+				var gamelinkend = "</a>";
 				html += "<div class=\"game-container\">";
 				html += "<div class=\"game-header-container\">";
+				html += gamelinkstart;
 				html += "<img class=\"game-pic\" src=\"" + result["games"][i]["image"] + "\"></img>";
 				html += "<div class=\"game-title-container\">";
 				html += result["games"][i]["title"];
 				html += "</div>";
+				html += gamelinkend;
 				html += "<div class=\"game-rating-container\">";
 				html += "<div class=\"game-rating\" style=\"padding-right:" + ratingmaskwidth + "%\"></div>";
 				html += "</div>";
 				html += "</div>";
+				html += gamelinkstart;
 				html += "<div class=\"game-body-container\">";
 				html += result["games"][i]["description"];
 				html += "</div>";
+				html += gamelinkend;
 				html += "</div>";
-				html += "</a>";
 			}
 			$(".game-list-container").html(html);
 			$(".loading").addClass("hidden");
@@ -57,17 +62,24 @@ function viewGame(id) {
 			var html = "";
 			var result = $.parseJSON(response);
 			console.log(result);
+			html += "<div class=\"game-view-header\">";
+			html += "<div class=\"game-view-icon\"></div>";
+			html += "<div class=\"game-view-closebutton\" onclick=\"closeGame()\"></div>";
+			html += "<div class=\"game-view-title\">";
 			html += result["gameinfo"]["title"];
+			html += "</div>";
+			html += "</div>";
+			html += "<div class=\"game-view-body\">";
+			html += "<img class=\"game-view-image\" src=\"" + result["gameinfo"]["image"] + "\"></img>";
+			html += "</div>";
 			$(".game-view-container").html(html);
-			$(".game-list-container").addClass("hidden");
-			$(".game-view-container").removeClass("hidden");
+			$(".game-view-viewport").show('slide', {direction:'down'});
 			$(".loading").addClass("hidden");
 		});
 }
 
 function closeGame() {
-	$(".game-view-container").addClass("hidden");
-	$(".game-list-container").removeClass("hidden");
+	$(".game-view-viewport").hide('slide', {direction:'down'});
 }
 </script>
 
@@ -107,9 +119,13 @@ function closeGame() {
 </div>
 <div class="body-container">
 	<div class="content-container">
-		<div class="game-list-container">
+		<div class="game-list-viewport">
+			<div class="game-list-container">
+			</div>
 		</div>
-		<div class="game-view-container hidden">
+		<div class="game-view-viewport">
+			<div class="game-view-container">
+			</div>
 		</div>
 	</div>
 </div>
