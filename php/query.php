@@ -37,12 +37,18 @@ if($_POST) {
 	case 'query_gameinfo':
 		$gameid = $_POST['gamekey'];
 		$gameinfo = array();
-		if($query = $mysqli->prepare("select g_title from Games where gamekey = ?")) {
+		if($query = $mysqli->prepare("select g_title, g_steamappid from Games where gamekey = ?")) {
 			$query->bind_param("i", $gameid);
 			$query->execute();
-			$query->bind_result($g_title);
+			$query->bind_result($g_title, $g_steamappid);
 			while($query->fetch()) {
 				$gameinfo["title"] = $g_title;
+				if($g_steamappid) {
+					$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
+				} else {
+					$g_image = "images/noimage.png";
+				}
+				$gameinfo["image"] = $g_image;
 			}
 			$query->close();
 		}
