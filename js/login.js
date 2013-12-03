@@ -15,7 +15,7 @@ $(document).ready(function() {
 			cookie: true,
 			xfbml: true,
 			oauth: true,
-			channelUrl: '//bbamsch.com/transicat/channel.html',
+			channelUrl: '//bbamsch.com/databases/channel.html',
 		});     
 		FB.getLoginStatus(facebookUpdate);
 	});
