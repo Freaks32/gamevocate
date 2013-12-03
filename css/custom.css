@@ -17,6 +17,15 @@
 	visiblity:hidden;
 }
 
+/* Header Style */
+
+.dropdown-icon {
+	width: 20;
+	height: 20;
+	vertical-align: bottom;
+	margin-right: 10;
+}
+
 /* Loading Style */
 
 .loading {
