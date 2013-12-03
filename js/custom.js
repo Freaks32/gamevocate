@@ -55,7 +55,15 @@ function viewGame(id) {
 			html += "</div>";
 			html += "</div>";
 			html += "<div class=\"game-view-body\">";
+			html += "<div class=\"game-view-gameinfo\">";
 			html += "<img class=\"game-view-image\" src=\"" + result["gameinfo"]["image"] + "\"></img>";
+			html += "<div class=\"game-view-gameinfo-body\">";
+			html += "Game Info Placeholder";
+			html += "</div>";
+			html += "</div>";
+			html += "<div class=\"game-view-gamebody\">";
+			html += "Game Body Placeholder";
+			html += "</div>";
 			html += "</div>";
 			$(".game-view-container").html(html);
 			$(".game-view-viewport").show('slide', {direction:'down'});
