@@ -20,6 +20,8 @@ if($_POST) {
 			while($query->fetch()) {
 				if($g_steamappid) {
 					$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
+				} else if(file_exists("../images/games/" . $gamekey . ".jpg")) {
+					$g_image = "images/games/" . $gamekey . ".jpg";
 				} else {
 					$g_image = "images/noimage.png";
 				}
@@ -37,19 +39,27 @@ if($_POST) {
 	case 'query_gameinfo':
 		$gameid = $_POST['gamekey'];
 		$gameinfo = array();
-		if($query = $mysqli->prepare("select g_title, g_steamappid from Games where gamekey = ?")) {
+		if($query = $mysqli->prepare("select g_title, g_steamappid, g_description, ge_name from Games natural join GameOfGenre natural join Genres where gamekey = ?")) {
 			$query->bind_param("i", $gameid);
 			$query->execute();
-			$query->bind_result($g_title, $g_steamappid);
+			$query->bind_result($g_title, $g_steamappid, $g_description, $ge_name);
+			$i = 0;
+			$genres = array();
 			while($query->fetch()) {
-				$gameinfo["title"] = $g_title;
-				if($g_steamappid) {
-					$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
-				} else {
-					$g_image = "images/noimage.png";
+				if($i == 0) {
+					$gameinfo["title"] = $g_title;
+					if($g_steamappid) {
+						$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
+					} else {
+						$g_image = "images/noimage.png";
+					}
+					$gameinfo["image"] = $g_image;
+					$gameinfo["description"] = $g_description;
 				}
-				$gameinfo["image"] = $g_image;
+				$genres[$i] = $ge_name;
+				$i++;
 			}
+			$gameinfo["genres"] = $genres;
 			$query->close();
 		}
 		$result["gameinfo"] = $gameinfo;
