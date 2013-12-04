@@ -9,8 +9,9 @@ $(document).ready(function() {
 			var result = $.parseJSON(response);
 			console.log(result);
 			for(var i = 0; i < result["games"].length; i++) {
+				var gamekey = result["games"][i]["gamekey"];
 				var ratingmaskwidth = 100 - (result["games"][i]["avgrating"] * 20.0);
-				var gamelinkstart = "<a href=\"#\" onclick=\"viewGame(" + result["games"][i]["gamekey"] + ")\">";
+				var gamelinkstart = "<a href=\"#\" onclick=\"viewGame(" + gamekey + ")\">";
 				var gamelinkend = "</a>";
 				html += "<div class=\"game-container\">";
 				html += "<div class=\"game-header-container\">";
@@ -21,7 +22,15 @@ $(document).ready(function() {
 				html += "</div>";
 				html += gamelinkend;
 				html += "<div class=\"game-rating-container\">";
-				html += "<div class=\"game-rating\" style=\"padding-right:" + ratingmaskwidth + "%\"></div>";
+				html += "<div id=\"game-rate-" + gamekey + "\" class=\"game-rating\" style=\"padding-right:" + ratingmaskwidth + "%\"></div>";
+				html += "<div id=\"game-urate-" + gamekey + "\" class=\"game-user-rating hide-rating\"></div>";
+				html += "<ul class=\"game-rating-actions\" onmouseout=\"dispRating(" + gamekey + ",0)\">";
+				html += "<li class=\"game-rating-value game-rating-5\" onmouseover=\"dispRating(" + gamekey + ",5)\"></li>";
+				html += "<li class=\"game-rating-value game-rating-4\" onmouseover=\"dispRating(" + gamekey + ",4)\"></li>";
+				html += "<li class=\"game-rating-value game-rating-3\" onmouseover=\"dispRating(" + gamekey + ",3)\"></li>";
+				html += "<li class=\"game-rating-value game-rating-2\" onmouseover=\"dispRating(" + gamekey + ",2)\"></li>";
+				html += "<li class=\"game-rating-value game-rating-1\" onmouseover=\"dispRating(" + gamekey + ",1)\"></li>";
+				html += "</ul>";
 				html += "</div>";
 				html += "</div>";
 				html += gamelinkstart;
@@ -35,6 +44,17 @@ $(document).ready(function() {
 			//$(".loading").addClass("hidden");
 		});
 });
+
+function dispRating(gamekey, rating) {
+	if(rating == 0) {
+		$("#game-rate-" + gamekey).removeClass("hide-rating");
+	} else {
+		$("#game-rate-" + gamekey).addClass("hide-rating");
+	}
+	var padd = (5 - rating) * 20;
+	$("#game-urate-" + gamekey).css("padding-right", padd + "%");
+	$("#game-urate-" + gamekey).removeClass("hide-rating");
+}
 
 function viewGame(id) {
 	$(".loading").removeClass("hidden");
