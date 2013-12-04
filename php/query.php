@@ -37,10 +37,10 @@ if($_POST) {
 		echo json_encode($result);
 		break;
 	case 'query_gameinfo':
-		$gameid = $_POST['gamekey'];
+		$gamekey = $_POST['gamekey'];
 		$gameinfo = array();
 		if($query = $mysqli->prepare("select g_title, g_steamappid, g_description, ge_name from Games natural join GameOfGenre natural join Genres where gamekey = ?")) {
-			$query->bind_param("i", $gameid);
+			$query->bind_param("i", $gamekey);
 			$query->execute();
 			$query->bind_result($g_title, $g_steamappid, $g_description, $ge_name);
 			$i = 0;
@@ -51,7 +51,7 @@ if($_POST) {
 					if($g_steamappid) {
 						$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
 					} else if(file_exists("../images/games/" . $gamekey . ".jpg")) {
-					$g_image = "images/games/" . $gamekey . ".jpg";
+						$g_image = "images/games/" . $gamekey . ".jpg";
 					} else {
 						$g_image = "images/noimage.png";
 					}
