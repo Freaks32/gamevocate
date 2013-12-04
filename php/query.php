@@ -50,6 +50,8 @@ if($_POST) {
 					$gameinfo["title"] = $g_title;
 					if($g_steamappid) {
 						$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
+					} else if(file_exists("../images/games/" . $gamekey . ".jpg")) {
+					$g_image = "images/games/" . $gamekey . ".jpg";
 					} else {
 						$g_image = "images/noimage.png";
 					}
