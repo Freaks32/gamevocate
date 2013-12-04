@@ -78,7 +78,7 @@ function viewGame(id) {
 			html += "<div class=\"game-view-gameinfo\">";
 			html += "<img class=\"game-view-image\" src=\"" + result["gameinfo"]["image"] + "\"></img>";
 			html += "<div class=\"game-view-gameinfo-body\">";
-			html += "Game Info Placeholder";
+			html += gameInfo(result);
 			html += "</div>";
 			html += "</div>";
 			html += "<div class=\"game-view-gamebody\">";
@@ -89,6 +89,21 @@ function viewGame(id) {
 			$(".game-view-viewport").show('slide', {direction:'down'});
 			$(".loading").addClass("hidden");
 		});
+}
+
+function gameInfo(result) {
+	var html = "";
+	html += "<div class=\"game-view-gameinfo-label\"><b>Genre(s):</b></div>";
+	for(var i = 0; i < result["gameinfo"]["genres"].length; i++) {
+		html += result["gameinfo"]["genres"][i];
+		if(i < result["gameinfo"]["genres"].length - 1) {
+			html += ", ";
+		}
+	}
+	html += "<br />";
+	html += "<div class=\"game-view-gameinfo-label\"><b>Description:</b></div>";
+	html += result["gameinfo"]["description"];
+	return html;
 }
 
 function closeGame() {

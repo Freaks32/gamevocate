@@ -277,6 +277,18 @@
 	border-radius:9px;
 	margin-top:8px;
 	padding:8px;
+	padding-top:0px;
+	overflow-y:auto;
+}
+.game-view-gameinfo-label {
+	width:100%;
+	margin-top:8px;
+	margin-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	border-radius:9px;
+	color:#000000;
+	background-color:#CCCCCC;
 }
 .game-view-gamebody {
 	float:both;
