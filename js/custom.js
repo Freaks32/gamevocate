@@ -25,11 +25,11 @@ $(document).ready(function() {
 				html += "<div id=\"game-rate-" + gamekey + "\" class=\"game-rating\" style=\"padding-right:" + ratingmaskwidth + "%\"></div>";
 				html += "<div id=\"game-urate-" + gamekey + "\" class=\"game-user-rating hide-rating\"></div>";
 				html += "<ul class=\"game-rating-actions\" onmouseout=\"dispRating(" + gamekey + ",0)\">";
-				html += "<li class=\"game-rating-value game-rating-5\" onmouseover=\"dispRating(" + gamekey + ",5)\"></li>";
-				html += "<li class=\"game-rating-value game-rating-4\" onmouseover=\"dispRating(" + gamekey + ",4)\"></li>";
-				html += "<li class=\"game-rating-value game-rating-3\" onmouseover=\"dispRating(" + gamekey + ",3)\"></li>";
-				html += "<li class=\"game-rating-value game-rating-2\" onmouseover=\"dispRating(" + gamekey + ",2)\"></li>";
-				html += "<li class=\"game-rating-value game-rating-1\" onmouseover=\"dispRating(" + gamekey + ",1)\"></li>";
+				html += "<li class=\"game-rating-value game-rating-5\" onmouseover=\"dispRating(" + gamekey + ",5)\" onclick=\"pushRating(" + gamekey + ",5)\"></li>";
+				html += "<li class=\"game-rating-value game-rating-4\" onmouseover=\"dispRating(" + gamekey + ",4)\" onclick=\"pushRating(" + gamekey + ",4)\"></li>";
+				html += "<li class=\"game-rating-value game-rating-3\" onmouseover=\"dispRating(" + gamekey + ",3)\" onclick=\"pushRating(" + gamekey + ",3)\"></li>";
+				html += "<li class=\"game-rating-value game-rating-2\" onmouseover=\"dispRating(" + gamekey + ",2)\" onclick=\"pushRating(" + gamekey + ",2)\"></li>";
+				html += "<li class=\"game-rating-value game-rating-1\" onmouseover=\"dispRating(" + gamekey + ",1)\" onclick=\"pushRating(" + gamekey + ",1)\"></li>";
 				html += "</ul>";
 				html += "</div>";
 				html += "</div>";
@@ -44,17 +44,6 @@ $(document).ready(function() {
 			//$(".loading").addClass("hidden");
 		});
 });
-
-function dispRating(gamekey, rating) {
-	if(rating == 0) {
-		$("#game-rate-" + gamekey).removeClass("hide-rating");
-	} else {
-		$("#game-rate-" + gamekey).addClass("hide-rating");
-	}
-	var padd = (5 - rating) * 20;
-	$("#game-urate-" + gamekey).css("padding-right", padd + "%");
-	$("#game-urate-" + gamekey).removeClass("hide-rating");
-}
 
 function viewGame(id) {
 	$(".loading").removeClass("hidden");
@@ -78,7 +67,7 @@ function viewGame(id) {
 			html += "<div class=\"game-view-gameinfo\">";
 			html += "<img class=\"game-view-image\" src=\"" + result["gameinfo"]["image"] + "\"></img>";
 			html += "<div class=\"game-view-gameinfo-body\">";
-			html += "Game Info Placeholder";
+			html += gameInfo(result);
 			html += "</div>";
 			html += "</div>";
 			html += "<div class=\"game-view-gamebody\">";
@@ -91,6 +80,115 @@ function viewGame(id) {
 		});
 }
 
+function gameInfo(result) {
+	var html = "";
+	html += "<div class=\"game-view-gameinfo-label\"><b>Genre(s):</b></div>";
+	for(var i = 0; i < result["gameinfo"]["genres"].length; i++) {
+		html += result["gameinfo"]["genres"][i];
+		if(i < result["gameinfo"]["genres"].length - 1) {
+			html += ", ";
+		}
+	}
+	html += "<br />";
+	html += "<div class=\"game-view-gameinfo-label\"><b>Description:</b></div>";
+	html += result["gameinfo"]["description"];
+	return html;
+}
+
 function closeGame() {
 	$(".game-view-viewport").hide('slide', {direction:'down'});
+}
+
+/* Ratings */
+
+function dispRating(gamekey, rating) {
+	if(rating == 0) {
+		$("#game-rate-" + gamekey).removeClass("hide-rating");
+	} else {
+		$("#game-rate-" + gamekey).addClass("hide-rating");
+	}
+	var padd = (5 - rating) * 20;
+	$("#game-urate-" + gamekey).css("padding-right", padd + "%");
+	$("#game-urate-" + gamekey).removeClass("hide-rating");
+}
+
+function loadRating(gamekey) {
+	var params = {};
+
+	// Set Query Type
+	params['type'] = "query_gamerating";
+	params['gamekey'] = gamekey;
+
+	// POST to query.php
+	$.post("php/query.php",
+		params,
+		function(response) {
+			var result = $.parseJSON(response);
+			console.log(result);
+			var padd = (5 - result['rating']) / 5 * 100;
+			$("#game-rate-" + gamekey).css("padding-right", padd + "%"); 
+		});
+}
+
+function pushRating(gamekey, rating) {
+	$(".loading").removeClass("hidden");
+	var params = {};
+
+	// Set Push Type
+	params['type'] = "push_review";
+	
+	// Create Review Container & Fill
+	var review = {};
+	review['type'] = "rating";
+	review['gamekey'] = gamekey;
+	review['rating'] = rating;
+
+	// Attach Review Container to Params
+	params['review'] = review;
+
+	// POST to push.php
+	$.post("php/push.php",
+		params,
+		function(response) {
+			console.log(response);
+			var result = $.parseJSON(response);
+			console.log(result);
+			if(!result['success']) {
+				alert("Error while pushing Rating");
+			} else {
+				loadRating(gamekey);
+			}
+			$(".loading").addClass("hidden");
+		});
+}
+
+function pushReview(gamekey, title, body) {
+	$(".loading").removeClass("hidden");
+	var params = {};
+
+	// Set Push Type
+	params['type'] = "push_review";
+
+	// Create Review Container & Fill
+	var review = {};
+	review['type'] = "review";
+	review['gamekey'] = gamekey;
+	review['title'] = title;
+	review['body'] = body;
+
+	// Attach Review Container to Params
+	params['review'] = review;
+
+	// POST to push.php
+	$.post("php/push.php",
+		params,
+		function(response) {
+			console.log(response);
+			var result = $.parseJSON(response);
+			console.log(result);
+			if(!result['success']) {
+				alert("Error while pushing Review");
+			}
+			$(".loading").addClass("hidden");
+		});
 }
