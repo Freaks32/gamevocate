@@ -34,7 +34,6 @@ if($_POST) {
 			$query->close();
 		}
 		$result["games"] = $games;
-		echo json_encode($result);
 		break;
 	case 'query_gameinfo':
 		$gamekey = $_POST['gamekey'];
@@ -65,11 +64,22 @@ if($_POST) {
 			$query->close();
 		}
 		$result["gameinfo"] = $gameinfo;
-		echo json_encode($result);
+		break;
+	case 'query_gamerating':
+		$gamekey = $_POST['gamekey'];
+		if($query = $mysqli->prepare("select g_avgrating from Games where gamekey = ?")) {
+			$query->bind_param("i", $gamekey);
+			$query->execute();
+			$query->bind_result($rating);
+			$query->fetch();
+			$query->close();
+		}
+		$result["rating"] = $rating;
 		break;
 	default:
 		die("Unknown Query Type");
 	}
+	echo json_encode($result);
 } else {
 	die("No Post Data Received");
 }
