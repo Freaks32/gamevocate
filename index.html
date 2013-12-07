@@ -20,17 +20,15 @@
 			GameVocate
 		</div>
 	</div>
-	<!-- These are Too Wide When Window is Small -->
+	<ul class="nav navbar-nav">
+		<li class="active">
+			<a href="#" onclick="listGames(this)" close="hideListGames()">Games</a>
+		</li>
+		<li>
+			<a href="#" onclick="listGenres(this)" close="hideListGenres()">Genres</a>
+		</li>
+	</ul>
 	<ul class="nav navbar-nav navbar-right">
-		<!--<li>
-			<a href="#">Element #1</a>
-		</li>
-		<li>
-			<a href="#">Element #2</a>
-		</li>
-		<li>
-			<a href="#">Element #3</a>
-		</li>-->
 		<li id="nav_acct" class="dropdown">
 			<a id="nav_acct_btn" class="dropdown-toggle" data-toggle="dropdown" href="#">Login</a>
 			<ul id="nav_acct_dropdown" class="dropdown-menu">
@@ -43,8 +41,12 @@
 </div>
 <div class="body-container">
 	<div class="content-container">
-		<div class="game-list-viewport">
-			<div class="game-list-container">
+		<div id="game-list-viewport" class="general-viewport">
+			<div id="game-list-container" class="general-container">
+			</div>
+		</div>
+		<div id="genre-list-viewport" class="general-viewport" style="display:none">
+			<div id="genre-list-container" class="general-container">
 			</div>
 		</div>
 		<div class="game-view-viewport">

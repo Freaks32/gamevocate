@@ -26,6 +26,8 @@ if($fbuid = $fb->getUser()) {
 	die("User's Facebook Not Connected");
 }
 
+$result['userkey'] = $userkey;
+
 if($_POST) {
 	// Default Successful Result
 	$result['success'] = true;

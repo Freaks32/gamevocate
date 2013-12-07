@@ -1,3 +1,10 @@
+/* Hide Name in Navbar for Small Screens */
+@media screen and (max-width: 500px) {
+	.navbar-brand {
+		display:none;
+	}
+}
+
 .body-container {
 	position:absolute;
 	top:35px;
@@ -50,6 +57,46 @@
 	background-repeat:no-repeat;
 	background-position:50% 50%;
 	background-color:rgb(255, 255, 255);
+}
+
+/* Generalized Viewport Style */
+
+.general-viewport {
+	position:absolute;
+	width:100%;
+	height:100%;
+	overflow-x:hidden;
+	overflow-y:scroll;
+}
+.general-container {
+	margin-left:auto;
+	margin-right:auto;
+	overflow:hidden;
+}
+@media screen and (min-width: 325px) {
+	.general-container {
+		width:310px;
+	}
+}
+@media screen and (min-width: 635px) {
+	.general-container {
+		width:620px;
+	}
+}
+@media screen and (min-width: 945px) {
+	.general-container {
+		width:930px;
+	}
+}
+@media screen and (min-width: 1245px) {
+	.general-container {
+		width:1230px;
+	}
+}
+@media screen and (min-width: 1655px) {
+	.general-container {
+		width:1640px;
+	}
 }
 
 /* Game Listing Styles */

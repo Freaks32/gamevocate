@@ -20,10 +20,14 @@ if($fbuid = $fb->getUser()) {
 		$query->fetch();
 		$query->close();
 	} else {
-		die("Unable to Identify User");
+		$g_userkey = -1;
+		$g_username = null;
+		$g_permission = 0;
 	}
 } else {
-	die("User's Facebook Not Connected");
+	$g_userkey = -1;
+	$g_username = null;
+	$g_permission = 0;
 }
 
 if($_POST) {
