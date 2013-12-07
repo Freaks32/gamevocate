@@ -298,6 +298,66 @@
 	margin-top:8px;
 	padding:8px;
 }
+.game-view-reviews-container {
+	width:268px;
+}
+.game-view-reviews-label {
+	width:100%;
+	margin-bottom:5px;
+	padding-left:5px;
+	padding-right:5px;
+	border-radius:9px;
+	color:#000000;
+	background-color:#CCCCCC;
+}
+.game-view-review-container {
+	width:100%;
+	margin-bottom:8px;
+}
+.game-view-review-head {
+	font-size:16pt;
+	width:100%;
+	padding-left:8px;
+	padding-right:8px;
+	color:#FFFFFF;
+	background-color:#000000;
+	border-top-left-radius:9px;
+	border-top-right-radius:9px;
+}
+.game-view-review-edit {
+	float:right;
+	margin-top:6px;
+	margin-left:6px;
+	background-image:url('images/edit.png');
+	background-clip:content-box;
+	background-size:contain;
+	width:18px;
+	height:18px;
+}
+.game-view-review-delete {
+	float:right;
+	margin-left:6px;
+	margin-top:6px;
+	background-image:url('images/delete.png');
+	background-clip:content-box;
+	background-size:contain;
+	width:18px;
+	height:18px;
+}
+/* Doesn't Look Good */
+/*.game-view-review-edit:hover {
+	-moz-box-shadow: 0px 0px 4px #FFFFFF; 
+	-webkit-box-shadow: 0px 0px 4px #FFFFFF; 
+	box-shadow: 0px 0px 10px #FFFFFF; 
+}*/
+.game-view-review-body {
+	width:100%;
+	max-height:400px;
+	padding:8px;
+	background-color:#CCCCCC;
+	border-bottom-left-radius:9px;
+	border-bottom-right-radius:9px;
+}
 @media screen and (min-width: 325px) {
 	.game-view-container {
 		width:310px;
@@ -346,6 +406,9 @@
 	.game-view-gamebody {
 		width:594px;
 	}
+	.game-view-reviews-container {
+		width:578px;
+	}
 }
 @media screen and (min-width: 945px) {
 	.game-view-container {
@@ -366,6 +429,9 @@
 	}
 	.game-view-gamebody {
 		width:904px;
+	}
+	.game-view-reviews-container {
+		width:888px;
 	}
 }
 @media screen and (min-width: 1245px) {
@@ -394,6 +460,9 @@
 		width:812px;
 		min-height:400px;
 	}
+	.game-view-reviews-container {
+		width:796px;
+	}
 
 }
 @media screen and (min-width: 1655px) {
@@ -417,6 +486,9 @@
 		margin-left:468px;
 		width:1144px;
 		min-height:500px;
+	}
+	.game-view-reviews-container {
+		width:1128px;
 	}
 }
 
