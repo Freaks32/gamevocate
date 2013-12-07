@@ -5,9 +5,26 @@
 //ini_set("display_errors", "1");
 
 require_once('db.php');
-
+require_once('fb.php');
+require_once('priviledges.php');
 $result = array();
 $mysqli = dbconnect();
+$fb = fbconnect();
+
+if($fbuid = $fb->getUser()) {
+	if($query = $mysqli->prepare("select userkey, u_username, c_permissions from Users natural join Classes where u_fbuid = ?")) {
+		$query->bind_param("s", $fbuid);
+		$query->execute();
+		// Bind to $g_userkey, and $g_permissions to differentiate variables
+		$query->bind_result($g_userkey, $g_username, $g_permissions);
+		$query->fetch();
+		$query->close();
+	} else {
+		die("Unable to Identify User");
+	}
+} else {
+	die("User's Facebook Not Connected");
+}
 
 if($_POST) {
 	switch($_POST['type']) {
@@ -60,7 +77,56 @@ if($_POST) {
 				$genres[$i] = $ge_name;
 				$i++;
 			}
+			$gameinfo["gamekey"] = $gamekey;
 			$gameinfo["genres"] = $genres;
+			$query->close();
+		}
+		if($query = $mysqli->prepare("select r_title, r_body, r_rating, r_timestamp, userkey, u_username from Reviews natural join Users where gamekey = ? and userkey <> ?")) {
+			$query->bind_param("ii", $gamekey, $g_userkey);
+			$query->execute();
+			$query->bind_result($r_title, $r_body, $r_rating, $r_timestamp, $userkey, $u_username);
+			$i = 0;
+			$reviews = array();
+			while($query->fetch()) {
+				$review = array();
+				$review["title"] = $r_title;
+				$review["body"] = $r_body;
+				$review["rating"] = $r_rating;
+				$review["timestamp"] = $r_timestamp;
+				$review["userkey"] = $userkey;
+				$review["username"] = $u_username;
+				// If Edit Admin Permission
+				if($g_permissions & $PERMISSION_EDIT) {
+					$review["edit"] = true;
+				} else {
+					$review["edit"] = false;
+				}
+				$reviews[$i] = $review;
+				$i++;
+			}
+			$gameinfo["reviews"] = $reviews;
+			$query->close();
+		}
+		if($query = $mysqli->prepare("select r_title, r_body, r_rating, r_timestamp, userkey, u_username from Reviews natural join Users where gamekey = ? and userkey = ?")) {
+			$query->bind_param("ii", $gamekey, $g_userkey);
+			$query->execute();
+			$query->bind_result($r_title, $r_body, $r_rating, $r_timestamp, $userkey, $u_username);
+			$i = 0;
+			$userreview = array();
+			if($query->fetch()) {
+				$userreview["title"] = $r_title;
+				$userreview["body"] = $r_body;
+				$userreview["rating"] = $r_rating;
+				$userreview["timestamp"] = $r_timestamp;
+				$userreview["userkey"] = $userkey;
+				$userreview["username"] = $u_username;
+				$userreview["edit"] = true;
+			} else {
+				$userreview["userkey"] = $g_userkey;
+				$userreview["username"] = $g_username;
+				$userreview["edit"] = true;
+			}
+			$gameinfo["userreview"] = $userreview;
 			$query->close();
 		}
 		$result["gameinfo"] = $gameinfo;

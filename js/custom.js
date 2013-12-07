@@ -71,12 +71,201 @@ function viewGame(id) {
 			html += "</div>";
 			html += "</div>";
 			html += "<div class=\"game-view-gamebody\">";
-			html += "Game Body Placeholder";
+			html += gameReviews(result);
 			html += "</div>";
 			html += "</div>";
 			$(".game-view-container").html(html);
 			$(".game-view-viewport").show('slide', {direction:'down'});
 			$(".loading").addClass("hidden");
+		});
+}
+
+function gameReviews(result) {
+	var html = "";
+	html += "<div class=\"game-view-reviews-container\">";
+	html += "<div class=\"game-view-reviews-label\"><b>Your Review:</b></div>";
+	var review = result["gameinfo"]["userreview"];
+	var reviewid = "review-" + result["gameinfo"]["gamekey"] + "-" + review["userkey"];
+	html += "<div id=\"" + reviewid + "\" class=\"game-view-review-container\">";
+	html += "<div class=\"game-view-review-head\">";
+	html += review["username"];
+	if(review["timestamp"]) { //Timestamp only exists if Review Exists (If So, hide delete button)
+		html += "<div id=\"" + reviewid + "-deletebtn\" class=\"game-view-review-delete\" onclick=\"deleteReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+		html += "<div id=\"" + reviewid + "-editbtn\" class=\"game-view-review-edit\" onclick=\"showEditReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+	} else {
+		html += "<div id=\"" + reviewid + "-deletebtn\" class=\"game-view-review-delete\" style=\"display:none\" onclick=\"deleteReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+		html += "<div id=\"" + reviewid + "-editbtn\" class=\"game-view-review-edit\" onclick=\"newReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+	}
+	html += "</div>";
+	html += "<div id=\"" + reviewid + "-body\" class=\"game-view-review-body\">";
+	if(review["rating"]) {
+		html += review["rating"] + " / 5 <br />";
+	}
+	if(review["title"]) {
+		html += "<h4>" + review["title"] + "</h4>";
+	}
+	if(review["body"]) {
+		html += review["body"];
+	}
+	if(!review["timestamp"]) {
+		html += "Doesn't Exist! <div style=\"float:right\"> Write One! ^^^^ </div>";
+	}
+	html += "<div id=\"" + reviewid + "-json\" style=\"display:none\">" + JSON.stringify(review) + "</div>";
+	html += "</div>";
+	html += "</div>";
+
+	html += "<div class=\"game-view-reviews-label\"><b>Other Reviews:</b></div>";
+	for(var i = 0; i < result["gameinfo"]["reviews"].length; i++) {
+		var review = result["gameinfo"]["reviews"][i];
+		var reviewid = "review-" + result["gameinfo"]["gamekey"] + "-" + review["userkey"];
+		html += "<div id=\"" + reviewid + "\" class=\"game-view-review-container\">";
+		html += "<div class=\"game-view-review-head\">";
+		html += review["username"];
+		if(review["edit"]) {
+			html += "<div id=\"" + reviewid + "-deletebtn\" class=\"game-view-review-delete\" onclick=\"deleteReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+			html += "<div id=\"" + reviewid + "-editbtn\" class=\"game-view-review-edit\" onclick=\"showEditReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+		}
+		html += "</div>";
+		html += "<div id=\"" + reviewid + "-body\" class=\"game-view-review-body\">";
+		if(review["rating"]) {
+			html += review["rating"] + " / 5 <br />";
+		}
+		if(review["title"]) {
+			html += "<h4>" + review["title"] + "</h4>";
+		}
+		if(review["body"]) {
+			html += review["body"];
+		}
+		html += "<div id=\"" + reviewid + "-json\" style=\"display:none\">" + JSON.stringify(review) + "</div>";
+		html += "</div>";
+		html += "</div>";
+	}
+	html += "</div>";
+	return html;
+}
+
+function reviewAreaResize(o) {
+	o.style.height = "0px";
+	o.style.height = (25+o.scrollHeight) + "px";
+}
+
+function newReview(gamekey, userkey) {
+	var reviewid = "review-" + gamekey + "-" + userkey;
+	showEditReview(gamekey, userkey);
+	$("#" + reviewid + "-editbtn").click(function(e) {
+		e.preventDefault();
+		showEditReview(gamekey, userkey);
+	});
+}
+
+function showEditReview(gamekey, userkey) {
+	var reviewid = "review-" + gamekey + "-" + userkey;
+	var review = $.parseJSON($("#" + reviewid + "-json").html());
+	var html = "<form name=\"" + reviewid + "-form\">";
+	html += "<select name=\"rating\" style=\"width:100%\">";
+	html += "<option value=\"1\"" + ((review["rating"] == 1) ? "selected=\"selected\"" : "") + ">1 / 5</option>";
+	html += "<option value=\"2\"" + ((review["rating"] == 2) ? "selected=\"selected\"" : "") + ">2 / 5</option>";
+	html += "<option value=\"3\"" + ((review["rating"] == 3) ? "selected=\"selected\"" : "") + ">3 / 5</option>";
+	html += "<option value=\"4\"" + ((review["rating"] == 4) ? "selected=\"selected\"" : "") + ">4 / 5</option>";
+	html += "<option value=\"5\"" + ((review["rating"] == 5) ? "selected=\"selected\"" : "") + ">5 / 5</option>";
+	html += "</select><br />";
+	html += "<input type=\"text\" name=\"title\" style=\"width:100%\" maxlength=\"127\" value=\"" + ((review["title"] != null) ? review["title"] : "") + "\" /><br />";
+	html += "<textarea name=\"body\" onkeyup=\"reviewAreaResize(this)\" style=\"width:100%\" maxlength=\"2047\" >" + ((review["body"] != null) ? review["body"] : "") + "</textarea>";
+	html += "<div style=\"height:15px\">";
+	html += "<input type=\"submit\" style=\"float:right;width:100px\" />";
+	html += "</div>";
+	html += "</form>";
+	$("#" + reviewid + "-body").html(html);
+	$("#" + reviewid + "-editbtn").hide();
+	$("form[name=" + reviewid + "-form").submit(function(e) {
+		e.preventDefault();
+		$(".loading").show();
+		var review = {};
+		review["rating"] = $("form select[name='rating']").val();
+		review["title"] = $("form input[name='title']").val();
+		review["body"] = $("form textarea[name='body']").val();
+		console.log(review);
+		editReview(gamekey, userkey, review);
+	});
+}
+
+function deleteReview(gamekey, userkey) {
+	var result = confirm("Are you sure you want to delete this Review?");
+
+	if(result) {
+		$(".loading").show();
+
+		// Initialize Push Params
+		var params = {};
+
+		// Set Push Type
+		params['type'] = "push_delete_review";
+		params['gamekey'] = gamekey;
+		params['userkey'] = userkey;
+
+		// POST to push.php
+		$.post("php/push.php",
+			params,
+			function(response) {
+				console.log(response);
+				var result = $.parseJSON(response);
+				if(result["success"]) {
+					$("#review-" + gamekey + "-" + userkey).fadeOut(function() {
+						$("#review-" + gamekey + "-" + userkey).remove();
+					});
+				} else {
+					alert("Error Deleting Review");
+				}
+				$(".loading").hide();
+			});
+	} else {
+		// Do Nothing
+	}
+}
+
+function editReview(gamekey, userkey, reviewIn) {
+	var reviewid = "review-" + gamekey + "-" + userkey;
+	var html = "";
+	if(reviewIn["rating"]) {
+		html += reviewIn["rating"] + " / 5 <br />";
+	}
+	if(reviewIn["title"]) {
+		html += "<h4>" + reviewIn["title"] + "</h4>";
+	}
+	if(reviewIn["body"]) {
+		html += reviewIn["body"];
+	}
+	html += "<div id=\"" + reviewid + "-json\" style=\"display:none\">" + JSON.stringify(reviewIn) + "</div>";
+
+	var params = {};
+
+	// Set Push Type
+	params['type'] = "push_review";
+
+	// Create Review Container & Fill
+	var review = {};
+	review['type'] = "full";
+	review['gamekey'] = gamekey;
+	review['userkey'] = userkey;
+	review['rating'] = reviewIn["rating"];
+	review['title'] = reviewIn["title"];
+	review['body'] = reviewIn["body"];
+
+	// Attach Review Container to Params
+	params['review'] = review;
+
+	// POST to push.php
+	$.post("php/push.php",
+		params,
+		function(response) {
+			console.log(response);
+			var result = $.parseJSON(response);
+			if(result['success']) {
+				$("#" + reviewid + "-body").html(html);
+				$("#" + reviewid + "-editbtn").show();
+				$("#" + reviewid + "-deletebtn").show();
+			}
+			$(".loading").hide();
 		});
 }
 
@@ -188,6 +377,42 @@ function pushReview(gamekey, title, body) {
 			console.log(result);
 			if(!result['success']) {
 				alert("Error while pushing Review");
+			}
+			$(".loading").addClass("hidden");
+		});
+}
+
+/*
+  Push Full Review, Include userkey to allow modification of 
+  any user's reviews by Admins
+*/
+function pushFullReview(gamekey, userkey, rating, title, body) {
+	$(".loading").removeClass("hidden");
+	var params = {};
+
+	// Set Push Type
+	params['type'] = "push_review";
+
+	// Create Review Container & Fill
+	var review = {};
+	review['type'] = "full";
+	review['userkey'] = userkey;
+	review['gamekey'] = gamekey;
+	review['rating'] = rating;
+	review['title'] = title;
+	review['body'] = body;
+
+	// Attach Review Container to Params
+	params['review'] = review;
+
+	// POST to push.php
+	$.post("php/push.php",
+		params,
+		function(response) {
+			var result = $.parseJSON(response);
+			console.log(result);
+			if(!result['success']) {
+				alert("Error while pushing Full Review");
 			}
 			$(".loading").addClass("hidden");
 		});
