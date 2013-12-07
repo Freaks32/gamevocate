@@ -40,10 +40,54 @@ $(document).ready(function() {
 				html += gamelinkend;
 				html += "</div>";
 			}
-			$(".game-list-container").html(html);
+			$("#game-list-container").html(html);
 			//$(".loading").addClass("hidden");
 		});
 });
+
+/* Navigation Functions */
+
+function listGames(tab) {
+	if($(tab).parent().hasClass("active")) {
+		// Do Nothing
+	} else {
+		// Currently Active Tab
+		var activetab = $(tab).parent().parent().children(".active");
+
+		$("#game-list-viewport").show('slide', {direction:'right'});
+
+		// Switch Active Tab
+		$(tab).parent().addClass("active");
+		activetab.removeClass("active");
+		// Force Active Viewport to Close
+		eval(activetab.children("a").attr("close"));
+	}
+}
+function hideListGames(tab) {
+	$("#game-list-viewport").hide('slide', {direction:'left'});
+}
+
+function listGenres(tab) {
+	if($(tab).parent().hasClass("active")) {
+		// Do Nothing
+	} else {
+		// Currently Active Tab
+		var activetab = $(tab).parent().parent().children(".active");
+
+		$("#genre-list-viewport").show('slide', {direction:'right'});
+
+		// Switch Active Tab
+		$(tab).parent().addClass("active");
+		activetab.removeClass("active");
+		// Force Active Viewport to Close
+		eval(activetab.children("a").attr("close"));
+	}
+}
+function hideListGenres(tab) {
+	$("#genre-list-viewport").hide('slide', {direction:'left'});
+}
+
+/* Game View Functions */
 
 function viewGame(id) {
 	$(".loading").removeClass("hidden");
@@ -83,38 +127,40 @@ function viewGame(id) {
 function gameReviews(result) {
 	var html = "";
 	html += "<div class=\"game-view-reviews-container\">";
-	html += "<div class=\"game-view-reviews-label\"><b>Your Review:</b></div>";
 	var review = result["gameinfo"]["userreview"];
 	var reviewid = "review-" + result["gameinfo"]["gamekey"] + "-" + review["userkey"];
-	html += "<div id=\"" + reviewid + "\" class=\"game-view-review-container\">";
-	html += "<div class=\"game-view-review-head\">";
-	html += review["username"];
-	if(review["timestamp"]) { //Timestamp only exists if Review Exists (If So, hide delete button)
-		html += "<div id=\"" + reviewid + "-deletebtn\" class=\"game-view-review-delete\" onclick=\"deleteReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
-		html += "<div id=\"" + reviewid + "-editbtn\" class=\"game-view-review-edit\" onclick=\"showEditReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
-	} else {
-		html += "<div id=\"" + reviewid + "-deletebtn\" class=\"game-view-review-delete\" style=\"display:none\" onclick=\"deleteReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
-		html += "<div id=\"" + reviewid + "-editbtn\" class=\"game-view-review-edit\" onclick=\"newReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+	if(review["username"] != null) {
+		html += "<div class=\"game-view-reviews-label\"><b>Your Review:</b></div>";
+		html += "<div id=\"" + reviewid + "\" class=\"game-view-review-container\">";
+		html += "<div class=\"game-view-review-head\">";
+		html += review["username"];
+		if(review["timestamp"]) { //Timestamp only exists if Review Exists (If So, hide delete button)
+			html += "<div id=\"" + reviewid + "-deletebtn\" class=\"game-view-review-delete\" onclick=\"deleteReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+			html += "<div id=\"" + reviewid + "-editbtn\" class=\"game-view-review-edit\" onclick=\"showEditReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+		} else {
+			html += "<div id=\"" + reviewid + "-deletebtn\" class=\"game-view-review-delete\" style=\"display:none\" onclick=\"deleteReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+			html += "<div id=\"" + reviewid + "-editbtn\" class=\"game-view-review-edit\" onclick=\"newReview(" + result["gameinfo"]["gamekey"] + ", " + review["userkey"] + ")\"></div>";
+		}
+		html += "</div>";
+		html += "<div id=\"" + reviewid + "-body\" class=\"game-view-review-body\">";
+		if(review["rating"]) {
+			html += review["rating"] + " / 5 <br />";
+		}
+		if(review["title"]) {
+			html += "<h4>" + review["title"] + "</h4>";
+		}
+		if(review["body"]) {
+			html += review["body"];
+		}
+		if(!review["timestamp"]) {
+			html += "Doesn't Exist! <div style=\"float:right\"> Write One! ^^^^ </div>";
+		}
+		html += "<div id=\"" + reviewid + "-json\" style=\"display:none\">" + JSON.stringify(review) + "</div>";
+		html += "</div>";
+		html += "</div>";
 	}
-	html += "</div>";
-	html += "<div id=\"" + reviewid + "-body\" class=\"game-view-review-body\">";
-	if(review["rating"]) {
-		html += review["rating"] + " / 5 <br />";
-	}
-	if(review["title"]) {
-		html += "<h4>" + review["title"] + "</h4>";
-	}
-	if(review["body"]) {
-		html += review["body"];
-	}
-	if(!review["timestamp"]) {
-		html += "Doesn't Exist! <div style=\"float:right\"> Write One! ^^^^ </div>";
-	}
-	html += "<div id=\"" + reviewid + "-json\" style=\"display:none\">" + JSON.stringify(review) + "</div>";
-	html += "</div>";
-	html += "</div>";
 
-	html += "<div class=\"game-view-reviews-label\"><b>Other Reviews:</b></div>";
+	html += "<div class=\"game-view-reviews-label\"><b>Reviews:</b></div>";
 	for(var i = 0; i < result["gameinfo"]["reviews"].length; i++) {
 		var review = result["gameinfo"]["reviews"][i];
 		var reviewid = "review-" + result["gameinfo"]["gamekey"] + "-" + review["userkey"];
@@ -144,6 +190,27 @@ function gameReviews(result) {
 	return html;
 }
 
+function gameInfo(result) {
+	var html = "";
+	html += "<div class=\"game-view-gameinfo-label\"><b>Genre(s):</b></div>";
+	for(var i = 0; i < result["gameinfo"]["genres"].length; i++) {
+		html += result["gameinfo"]["genres"][i];
+		if(i < result["gameinfo"]["genres"].length - 1) {
+			html += ", ";
+		}
+	}
+	html += "<br />";
+	html += "<div class=\"game-view-gameinfo-label\"><b>Description:</b></div>";
+	html += result["gameinfo"]["description"];
+	return html;
+}
+
+function closeGame() {
+	$(".game-view-viewport").hide('slide', {direction:'down'});
+}
+
+/* Review Functions */
+
 function reviewAreaResize(o) {
 	o.style.height = "0px";
 	o.style.height = (25+o.scrollHeight) + "px";
@@ -152,10 +219,7 @@ function reviewAreaResize(o) {
 function newReview(gamekey, userkey) {
 	var reviewid = "review-" + gamekey + "-" + userkey;
 	showEditReview(gamekey, userkey);
-	$("#" + reviewid + "-editbtn").click(function(e) {
-		e.preventDefault();
-		showEditReview(gamekey, userkey);
-	});
+	$("#" + reviewid + "-editbtn").attr("onclick", "showEditReview(" + gamekey + ", " + userkey + ")");
 }
 
 function showEditReview(gamekey, userkey) {
@@ -210,8 +274,18 @@ function deleteReview(gamekey, userkey) {
 				console.log(response);
 				var result = $.parseJSON(response);
 				if(result["success"]) {
-					$("#review-" + gamekey + "-" + userkey).fadeOut(function() {
-						$("#review-" + gamekey + "-" + userkey).remove();
+					var reviewid = "review-" + gamekey + "-" + userkey;
+					$("#" + reviewid).fadeOut(function() {
+						if(userkey != result["userkey"]) {
+							$("#" + reviewid).remove();
+						} else {
+							var html = "Doesn't Exist! <div style=\"float:right\"> Write One! ^^^^ </div>";
+							html += "<div id=\"" + reviewid + "-json\" style=\"display:none\">" + JSON.stringify({}) + "</div>";
+							$("#" + reviewid + "-editbtn").attr("onclick", "newReview(" + gamekey + ", " + userkey + ")");
+							$("#" + reviewid + "-deletebtn").hide();
+							$("#" + reviewid + "-body").html(html);
+							$("#" + reviewid).fadeIn();
+						}
 					});
 				} else {
 					alert("Error Deleting Review");
@@ -267,25 +341,6 @@ function editReview(gamekey, userkey, reviewIn) {
 			}
 			$(".loading").hide();
 		});
-}
-
-function gameInfo(result) {
-	var html = "";
-	html += "<div class=\"game-view-gameinfo-label\"><b>Genre(s):</b></div>";
-	for(var i = 0; i < result["gameinfo"]["genres"].length; i++) {
-		html += result["gameinfo"]["genres"][i];
-		if(i < result["gameinfo"]["genres"].length - 1) {
-			html += ", ";
-		}
-	}
-	html += "<br />";
-	html += "<div class=\"game-view-gameinfo-label\"><b>Description:</b></div>";
-	html += result["gameinfo"]["description"];
-	return html;
-}
-
-function closeGame() {
-	$(".game-view-viewport").hide('slide', {direction:'down'});
 }
 
 /* Ratings */
