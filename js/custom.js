@@ -271,6 +271,13 @@ function gameInfo(result) {
 		}
 	}
 	html += "<br />";
+	html += "<div class=\"game-view-gameinfo-label\"><b>Studio(s):</b></div>";
+	for(var i = 0; i < result["gameinfo"]["studios"].length; i++) {
+		html += result["gameinfo"]["studios"];
+		if(i < result["gameinfo"]["studios"].length - 1) {
+			html += ", ";
+		}
+	}
 	html += "<div class=\"game-view-gameinfo-label\"><b>Description:</b></div>";
 	html += result["gameinfo"]["description"];
 	return html;

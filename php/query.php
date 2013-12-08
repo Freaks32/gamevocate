@@ -114,6 +114,18 @@ if($_POST) {
 			$gameinfo["genres"] = $genres;
 			$query->close();
 		}
+		if($query = $mysqli->prepare("select s_name from Studios natural join GameByStudio where gamekey = ?")) {
+			$query->bind_param("i", $gamekey);
+			$query->execute();	
+			$query->bind_result($s_name);
+			$i = 0;
+			$studios = array();
+			while($query->fetch()) {
+				$studios[$i++] = $s_name;
+			}
+			$gameinfo["studios"] = $studios;
+			$query->close();
+		}
 		if($query = $mysqli->prepare("select r_title, r_body, r_rating, r_timestamp, userkey, u_username from Reviews natural join Users where gamekey = ? and userkey <> ?")) {
 			$query->bind_param("ii", $gamekey, $g_userkey);
 			$query->execute();
