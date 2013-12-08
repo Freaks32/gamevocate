@@ -613,3 +613,28 @@
 		margin-top:-80px;
 	}
 }
+
+
+.genre-container {
+	margin:8px;
+	padding:8px;
+	border-radius:9px;
+	font-size:24pt;
+	color:#FFFFFF;
+	background-color:#000000;
+}
+.genre-like-btn {
+	float:right;
+	margin-right:6px;
+	margin-top:6px;
+	width:32px;
+	height:32px;
+	background-image:url('images/like.png');
+	background-size:contain;
+}
+.genre-like-btn:hover {
+	background-image:url('images/like-sel.png');
+}
+.genre-like-btn-sel {
+	background-image:url('images/like-sel.png') !important;
+}
