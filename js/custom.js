@@ -1,4 +1,9 @@
 $(document).ready(function() {
+	refreshGameList();
+});
+
+/* Games List Functions */
+function refreshGameList() {
 	/* Test Code, Load from Database */
 	var params = {};
 	params['type'] = "query_games";
@@ -43,7 +48,71 @@ $(document).ready(function() {
 			$("#game-list-container").html(html);
 			//$(".loading").addClass("hidden");
 		});
-});
+}
+
+/* Genre List Functions */
+function refreshGenreList() {
+	var params = {};
+	params['type'] = "query_genres";
+	$.post("php/query.php",
+		params,
+		function(response) {
+			console.log(response);
+			var result = $.parseJSON(response);
+			console.log(result);
+			var html = "";
+			for(var i = 0; i < result["genres"].length; i++) {
+				var genre = result["genres"][i];
+				html += "<div id=\"genre-" + genre["genrekey"] + "\" class=\"genre-container\">";
+				html += genre["name"];
+				if(genre["liked"]) {
+					html += "<div id=\"genre-" + genre["genrekey"] + "-likebtn\" class=\"genre-like-btn genre-like-btn-sel\" onclick=\"unlikeGenre(" + genre["genrekey"] + ")\"></div>";
+				} else {
+					html += "<div id=\"genre-" + genre["genrekey"] + "-likebtn\" class=\"genre-like-btn\" onclick=\"likeGenre(" + genre["genrekey"] + ")\"></div>";
+				}
+				html += "</div>";
+			}
+			$("#genre-list-container").html(html);
+		});
+}
+
+function likeGenre(genrekey) {
+	var params = {};
+	params['type'] = "push_genre_like";
+	params['genrekey'] = genrekey;
+	$.post("php/push.php",
+		params,
+		function(response) {
+			console.log(response);
+			var result = $.parseJSON(response);
+			console.log(result);
+			if(result["success"]) {
+				$("#genre-" + genrekey + "-likebtn").addClass("genre-like-btn-sel");
+				$("#genre-" + genrekey + "-likebtn").attr("onclick", "unlikeGenre(" + genrekey + ")");
+			} else {
+				alert("Operation Failed");
+			}
+		});
+}
+
+function unlikeGenre(genrekey) {
+var params = {};
+	params['type'] = "push_genre_unlike";
+	params['genrekey'] = genrekey;
+	$.post("php/push.php",
+		params,
+		function(response) {
+			console.log(response);
+			var result = $.parseJSON(response);
+			console.log(result);
+			if(result["success"]) {
+				$("#genre-" + genrekey + "-likebtn").removeClass("genre-like-btn-sel");
+				$("#genre-" + genrekey + "-likebtn").attr("onclick", "likeGenre(" + genrekey + ")");
+			} else {
+				alert("Operation Failed");
+			}
+		});
+}
 
 /* Navigation Functions */
 
@@ -54,6 +123,7 @@ function listGames(tab) {
 		// Currently Active Tab
 		var activetab = $(tab).parent().parent().children(".active");
 
+		refreshGameList();
 		$("#game-list-viewport").show('slide', {direction:'right'});
 
 		// Switch Active Tab
@@ -74,6 +144,7 @@ function listGenres(tab) {
 		// Currently Active Tab
 		var activetab = $(tab).parent().parent().children(".active");
 
+		refreshGenreList();
 		$("#genre-list-viewport").show('slide', {direction:'right'});
 
 		// Switch Active Tab

@@ -32,6 +32,35 @@ if($fbuid = $fb->getUser()) {
 
 if($_POST) {
 	switch($_POST['type']) {
+	case 'query_genres':
+		$genres = array();
+		if($query = $mysqli->prepare("select genrekey, ge_name, ge_description from Genres")) {
+			$query->execute();
+			$query->bind_result($genrekey, $ge_name, $ge_description);
+			$i = 0;
+			while($query->fetch()) {
+				$genres[$i++] = array(	"genrekey"=>$genrekey,
+							"name"=>$ge_name,
+							"description"=>$ge_description,
+							"liked"=>false);
+			}
+			$query->close();
+		}
+		if($query = $mysqli->prepare("select genrekey from UserLikesGenre natural join Users where userkey = ?")) {
+			$query->bind_param("i", $g_userkey);	
+			$query->execute();
+			$query->bind_result($genrekey);
+			$i = 0;
+			while($query->fetch()) {
+				$likes[$genrekey] = true;
+			}
+			$query->close();
+		}
+		for($i = 0; $i < sizeof($genres); $i++) {
+			$genres[$i]["liked"] = $likes[$genres[$i]["genrekey"]];
+		}
+		$result["genres"] = $genres;
+		break;
 	case 'query_games':
 		$games = array();
 		if($query = $mysqli->prepare("select gamekey, g_title, g_description, g_steamappid, g_avgrating from Games")) {

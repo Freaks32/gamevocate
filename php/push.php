@@ -20,10 +20,10 @@ if($fbuid = $fb->getUser()) {
 		$query->fetch();
 		$query->close();
 	} else {
-		die("Unable to Identify User");
+		$userkey = -1;
 	}
 } else {
-	die("User's Facebook Not Connected");
+	$userkey = -1;
 }
 
 $result['userkey'] = $userkey;
@@ -34,6 +34,44 @@ if($_POST) {
 
 	// Determine Push Type
 	switch($_POST['type']) {
+	case 'push_genre_like':
+		$genrekey = $_POST['genrekey'];
+		if($userkey == -1) {
+			$result['success'] = false;
+			$result['message'] = "User Not Logged In";
+		} else {
+			if($query = $mysqli->prepare("insert into UserLikesGenre (userkey, genrekey) values (?, ?)")) {
+				$query->bind_param("ii", $userkey, $genrekey);
+				if(!$query->execute()) {
+					$result['success'] = false;
+					$result['message'] = "Insertion Failed";
+				}
+				$query->close();
+			} else {
+				$result['success'] = false;
+				$result['message'] = "Query Preparation Failed";
+			}
+		}
+		break;
+	case 'push_genre_unlike';
+		$genrekey = $_POST['genrekey'];
+		if($userkey == -1) {
+			$result['success'] = false;
+			$result['message'] = "User Not Logged In";
+		} else {
+			if($query = $mysqli->prepare("delete from UserLikesGenre where userkey = ? and genrekey = ?")) {
+				$query->bind_param("ii", $userkey, $genrekey);
+				if(!$query->execute()) {
+					$result['success'] = false;
+					$result['message'] = "Deletion Failed";
+				}
+				$query->close();
+			} else {
+				$result['success'] = false;
+				$result['message'] = "Query Preparation Failed";
+			}
+		}
+		break;
 	case 'push_review':
 		$review = $_POST['review'];
 		$gamekey = $review['gamekey'];
