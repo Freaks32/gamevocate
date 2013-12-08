@@ -320,7 +320,6 @@ function showEditReview(gamekey, userkey) {
 	$("#" + reviewid + "-body").html(html);
 	$("#" + reviewid + "-editbtn").hide();
 	$("form[name=" + reviewid + "-form").submit(function(e) {
-		e.preventDefault();
 		$(".loading").show();
 		var review = {};
 		review["rating"] = $("form select[name='rating']").val();
@@ -328,6 +327,8 @@ function showEditReview(gamekey, userkey) {
 		review["body"] = $("form textarea[name='body']").val();
 		console.log(review);
 		editReview(gamekey, userkey, review);
+		e.preventDefault();
+		return false;
 	});
 }
 
