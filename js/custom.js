@@ -303,7 +303,7 @@ function newReview(gamekey, userkey) {
 function showEditReview(gamekey, userkey) {
 	var reviewid = "review-" + gamekey + "-" + userkey;
 	var review = $.parseJSON($("#" + reviewid + "-json").html());
-	var html = "<form name=\"" + reviewid + "-form\">";
+	var html = "<form name=\"" + reviewid + "-form\" accept-charset=\"utf-8\">";
 	html += "<select name=\"rating\" style=\"width:100%\">";
 	html += "<option value=\"1\"" + ((review["rating"] == 1) ? "selected=\"selected\"" : "") + ">1 / 5</option>";
 	html += "<option value=\"2\"" + ((review["rating"] == 2) ? "selected=\"selected\"" : "") + ">2 / 5</option>";
@@ -314,12 +314,12 @@ function showEditReview(gamekey, userkey) {
 	html += "<input type=\"text\" name=\"title\" style=\"width:100%\" maxlength=\"127\" value=\"" + ((review["title"] != null) ? review["title"] : "") + "\" /><br />";
 	html += "<textarea name=\"body\" onkeyup=\"reviewAreaResize(this)\" style=\"width:100%\" maxlength=\"2047\" >" + ((review["body"] != null) ? review["body"] : "") + "</textarea>";
 	html += "<div style=\"height:15px\">";
-	html += "<input type=\"submit\" style=\"float:right;width:100px\" />";
+	html += "<input id=\"review-form-subbtn\" type=\"submit\" style=\"float:right;width:100px\" />";
 	html += "</div>";
 	html += "</form>";
 	$("#" + reviewid + "-body").html(html);
 	$("#" + reviewid + "-editbtn").hide();
-	$("form[name=" + reviewid + "-form").submit(function(e) {
+	$("form[name='" + reviewid + "-form']").submit(function(e) {
 		$(".loading").show();
 		var review = {};
 		review["rating"] = $("form select[name='rating']").val();
@@ -327,7 +327,6 @@ function showEditReview(gamekey, userkey) {
 		review["body"] = $("form textarea[name='body']").val();
 		console.log(review);
 		editReview(gamekey, userkey, review);
-		e.preventDefault();
 		return false;
 	});
 }
