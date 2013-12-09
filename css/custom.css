@@ -565,6 +565,7 @@
 	-webkit-margin-start: 0px;
 	-webkit-margin-end: 0px;
 	-webkit-padding-start: 0px;
+	padding-left:0px;
 	margin-bottom:0px;
 	margin-top:-57px;
 }
@@ -637,4 +638,27 @@
 }
 .genre-like-btn-sel {
 	background-image:url('images/like-sel.png') !important;
+}
+
+/* Notification Style */
+
+.notification-container {
+	position:absolute;
+	top:50%;
+	left:50%;
+	margin-left:auto;
+	margin-right:auto;
+	padding:10px;
+	width:300px;
+	height:100px;
+	background-color:#000000;
+	text-align:center;
+	color:#FFFFFF;
+	font-size:26px;
+	border:5px solid #FFFFFF;
+	border-radius:30px;
+	box-shadow: 10px 10px 5px #888888;
+	transform:translate(-50%, -50%);
+	-ms-transform:rotate(-50%, -50%); /* IE 9 */
+	-webkit-transform:translate(-50%, -50%); /* Safari and Chrome */
 }

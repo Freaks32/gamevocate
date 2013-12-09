@@ -1,9 +1,9 @@
 <?php
 
-error_reporting(E_ALL);
-mysqli_report(MYSQLI_REPORT_ALL);
+//error_reporting(E_ALL);
+//mysqli_report(MYSQLI_REPORT_ALL);
 //error_reporting(E_ALL & ~E_NOTICE | E_STRICT); // Warns on good coding standards
-ini_set("display_errors", "1");
+//ini_set("display_errors", "1");
 
 require_once('db.php');
 require_once('fb.php');
@@ -97,7 +97,8 @@ if($_POST) {
 							}
 							$query->close();
 						} else {
-							die("Unable to Query Database - LINE:" . __LINE__);
+							$result['success'] = false;
+							$result['message'] = "Unable to Query Database";
 						}
 					} else {
 						// Insert when Review DNE
@@ -109,7 +110,8 @@ if($_POST) {
 							}
 							$query->close();
 						} else {
-							die("Unable to Query Database - LINE:" . __LINE__);
+							$result['success'] = false;
+							$result['message'] = "Unable to Query Database";
 						}
 					}
 				} else {
@@ -133,7 +135,8 @@ if($_POST) {
 								$result['success'] = false;
 							}
 						} else {
-							die("Unable to Query Database - LINE:" . __LINE__);
+							$result['success'] = false;
+							$result['message'] = "Unable to Query Database";
 						}
 					} else {
 						// Insert when Review DNE
@@ -144,7 +147,8 @@ if($_POST) {
 								$result['success'] = false;
 							}
 						} else {
-							die("Unable to Query Database - LINE:" . __LINE__);
+							$result['success'] = false;
+							$result['message'] = "Unable to Query Database";
 						}
 					}
 				} else {
@@ -189,10 +193,12 @@ if($_POST) {
 								if(!$query->execute()) {
 									// If Query fails to execute, Fail Result
 									$result['success'] = false;
+									$result['message'] = "Failed to Execute Query";
 								}
 								$query->close();
 							} else {
-								die("Unable to Query Database - LINE:" . __LINE__);
+								$result['success'] = false;
+								$result['message'] = "Unable to Query Database";
 							}
 						} else {
 							$result["INN"] = "DNE";
@@ -202,15 +208,18 @@ if($_POST) {
 								if(!$query->execute()) {
 									// If Query fails to execute, Fail Result
 									$result['success'] = false;
+									$resutl['message'] = "Failed to Execute Query";
 								}
 								$result["OUT"] = "CLOSE";
 								$query->close();
 							} else {
-								die("Unable to Query Database - LINE:" . __LINE__);
+								$result['success'] = false;
+								$result['message'] = "Unable to Query Database";
 							}
 						}
 					} else {
 						$result['success'] = false;
+						$result['message'] = "Unable to Determine Duplicate";
 						$result = addError($result, $subresult);
 					}
 				} else {
@@ -219,7 +228,8 @@ if($_POST) {
 				}
 				break;
 			default:
-				die("Unsupported Review Type - LINE:" . __LINE__);
+				$result['success'] = false;
+				$result['message'] = "Unsupported Review Type";
 			}
 		}
 		break;
@@ -263,12 +273,14 @@ if($_POST) {
 		}
 		break;
 	default:
-		die("Unknown Query Type - LINE:" . __LINE__);
+		$result['success'] = false;
+		$result['message'] = "Unknown Query Type";
 	}
 
 	echo json_encode($result);
 } else {
-	die("No Post Data Received");
+	$result['success'] = false;
+	$result['message'] = "No Post Data Recieved";
 }
 
 function checkPermissions($userkey, $permission_mask) {
@@ -301,7 +313,7 @@ function checkPermissions($userkey, $permission_mask) {
 		} else {
 			// If Fail to Prepare Query, Fail
 			$result['success'] = false;
-			$result['message'] = "Failed to Prepare Permission Query";
+			$result['message'] = "Failed to Prepare Query";
 		}
 	} else {
 		// If Userkey Invalid, Fail
@@ -343,6 +355,12 @@ function checkReviewExists($userkey, $gamekey) {
 }
 
 function addError($result, $subresult) {
+	if(!$result) {
+		$result = array();
+	}
+	if(!array_key_exists('errors', $result)) {
+		$result['errors'] = array();
+	}
 	// If Error Array DNE
 	if(!is_array($result['errors'])) {
 		// Initialize Error Array
