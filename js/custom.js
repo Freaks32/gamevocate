@@ -304,17 +304,20 @@ function showEditReview(gamekey, userkey) {
 	var reviewid = "review-" + gamekey + "-" + userkey;
 	var review = $.parseJSON($("#" + reviewid + "-json").html());
 	var html = "<form name=\"" + reviewid + "-form\" accept-charset=\"utf-8\">";
-	html += "<select name=\"rating\" style=\"width:100%\">";
+	html += "<label class=\"form-control\">Rating</label>";
+	html += "<select class=\"form-control\" name=\"rating\" style=\"width:100%\">";
 	html += "<option value=\"1\"" + ((review["rating"] == 1) ? "selected=\"selected\"" : "") + ">1 / 5</option>";
 	html += "<option value=\"2\"" + ((review["rating"] == 2) ? "selected=\"selected\"" : "") + ">2 / 5</option>";
 	html += "<option value=\"3\"" + ((review["rating"] == 3) ? "selected=\"selected\"" : "") + ">3 / 5</option>";
 	html += "<option value=\"4\"" + ((review["rating"] == 4) ? "selected=\"selected\"" : "") + ">4 / 5</option>";
 	html += "<option value=\"5\"" + ((review["rating"] == 5) ? "selected=\"selected\"" : "") + ">5 / 5</option>";
 	html += "</select><br />";
-	html += "<input type=\"text\" name=\"title\" style=\"width:100%\" maxlength=\"127\" value=\"" + ((review["title"] != null) ? review["title"] : "") + "\" /><br />";
-	html += "<textarea name=\"body\" onkeyup=\"reviewAreaResize(this)\" style=\"width:100%\" maxlength=\"2047\" >" + ((review["body"] != null) ? review["body"] : "") + "</textarea>";
+	html += "<label class=\"form-control\">Title</label>";
+	html += "<input class=\"form-control\" type=\"text\" name=\"title\" style=\"width:100%\" maxlength=\"127\" value=\"" + ((review["title"] != null) ? review["title"] : "") + "\" /><br />";
+	html += "<label class=\"form-control\">Body:</label>";
+	html += "<textarea class=\"form-control\" name=\"body\" onkeyup=\"reviewAreaResize(this)\" style=\"width:100%\" maxlength=\"2047\" >" + ((review["body"] != null) ? review["body"] : "") + "</textarea>";
 	html += "<div style=\"height:15px\">";
-	html += "<input id=\"review-form-subbtn\" type=\"submit\" style=\"float:right;width:100px\" />";
+	html += "<input class=\"form-control\" id=\"review-form-subbtn\" type=\"submit\" style=\"float:right;width:150px\" />";
 	html += "</div>";
 	html += "</form>";
 	$("#" + reviewid + "-body").html(html);
@@ -562,4 +565,20 @@ function notify(message) {
 	n.html("<b>" + message + "</b>");
 	n.show('fade');
 	n.delay(1500).hide('fade');
+}
+
+/* Footer Function */
+
+function showFooterBtn() {
+	$(".footer-show-btn").show('fade');
+}
+function hideFooterBtn() {
+	$(".footer-show-btn").hide('fade');
+}
+
+function showFooter() {
+	$(".footer-container").show('fade');
+}
+function hideFooter() {
+	$(".footer-container").hide('fade');
 }
