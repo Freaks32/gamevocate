@@ -314,10 +314,10 @@ function showEditReview(gamekey, userkey) {
 	html += "</select><br />";
 	html += "<label class=\"form-control\">Title</label>";
 	html += "<input class=\"form-control\" type=\"text\" name=\"title\" style=\"width:100%\" maxlength=\"127\" value=\"" + ((review["title"] != null) ? review["title"] : "") + "\" /><br />";
-	html += "<label class=\"form-control\">Body:</label>";
+	html += "<label class=\"form-control\">Body</label>";
 	html += "<textarea class=\"form-control\" name=\"body\" onkeyup=\"reviewAreaResize(this)\" style=\"width:100%\" maxlength=\"2047\" >" + ((review["body"] != null) ? review["body"] : "") + "</textarea>";
 	html += "<div style=\"height:15px\">";
-	html += "<input class=\"form-control\" id=\"review-form-subbtn\" type=\"submit\" style=\"float:right;width:150px\" />";
+	html += "<input class=\"form-control\" id=\"review-form-subbtn\" type=\"submit\" style=\"float:right;width:150px\" value=\"Submit\" />";
 	html += "</div>";
 	html += "</form>";
 	$("#" + reviewid + "-body").html(html);
