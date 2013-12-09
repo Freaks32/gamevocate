@@ -248,10 +248,10 @@ function gameReviews(result) {
 			html += review["rating"] + " / 5 <br />";
 		}
 		if(review["title"]) {
-			html += "<h4>" + review["title"] + "</h4>";
+			html += "<h4>" + unescape(review["title"]) + "</h4>";
 		}
 		if(review["body"]) {
-			html += review["body"];
+			html += unescape(review["body"]);
 		}
 		html += "<div id=\"" + reviewid + "-json\" style=\"display:none\">" + JSON.stringify(review) + "</div>";
 		html += "</div>";
@@ -326,8 +326,20 @@ function showEditReview(gamekey, userkey) {
 		$(".loading").show();
 		var review = {};
 		review["rating"] = $("form select[name='rating']").val();
-		review["title"] = escape($("form input[name='title']").val());
-		review["body"] = escape($("form textarea[name='body']").val());
+		var title = $("<div>" + $("form input[name='title']").val() + "</div>");
+		title.find('script').remove();
+		title.find('link').remove();
+		title.find('style').remove();
+		title.find('a').remove();
+		title.find('iframe').remove();
+		review["title"] = escape(title.html());
+		var body = $("<div>" + $("form textarea[name='body']").val() + "</div>");
+		body.find('script').remove();
+		body.find('link').remove();
+		body.find('style').remove();
+		body.find('a').remove();
+		body.find('iframe').remove();
+		review["body"] = escape(body.html());
 		console.log(review);
 		editReview(gamekey, userkey, review);
 		return false;
