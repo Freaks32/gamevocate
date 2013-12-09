@@ -218,10 +218,10 @@ function gameReviews(result) {
 			html += review["rating"] + " / 5 <br />";
 		}
 		if(review["title"]) {
-			html += "<h4>" + review["title"] + "</h4>";
+			html += "<h4>" + unescape(review["title"]) + "</h4>";
 		}
 		if(review["body"]) {
-			html += review["body"];
+			html += unescape(review["body"]);
 		}
 		if(!review["timestamp"]) {
 			html += "Doesn't Exist! <div style=\"float:right\"> Write One! ^^^^ </div>";
@@ -313,9 +313,9 @@ function showEditReview(gamekey, userkey) {
 	html += "<option value=\"5\"" + ((review["rating"] == 5) ? "selected=\"selected\"" : "") + ">5 / 5</option>";
 	html += "</select><br />";
 	html += "<label class=\"form-control\">Title</label>";
-	html += "<input class=\"form-control\" type=\"text\" name=\"title\" style=\"width:100%\" maxlength=\"127\" value=\"" + ((review["title"] != null) ? review["title"] : "") + "\" /><br />";
+	html += "<input class=\"form-control\" type=\"text\" name=\"title\" style=\"width:100%\" maxlength=\"127\" value=\"" + ((review["title"] != null) ? unescape(review["title"]) : "") + "\" /><br />";
 	html += "<label class=\"form-control\">Body</label>";
-	html += "<textarea class=\"form-control\" name=\"body\" onkeyup=\"reviewAreaResize(this)\" style=\"width:100%\" maxlength=\"2047\" >" + ((review["body"] != null) ? review["body"] : "") + "</textarea>";
+	html += "<textarea class=\"form-control\" name=\"body\" onkeyup=\"reviewAreaResize(this)\" style=\"width:100%\" maxlength=\"2047\" >" + ((review["body"] != null) ? unescape(review["body"]) : "") + "</textarea>";
 	html += "<div style=\"height:15px\">";
 	html += "<input class=\"form-control\" id=\"review-form-subbtn\" type=\"submit\" style=\"float:right;width:150px\" value=\"Submit\" />";
 	html += "</div>";
@@ -326,8 +326,8 @@ function showEditReview(gamekey, userkey) {
 		$(".loading").show();
 		var review = {};
 		review["rating"] = $("form select[name='rating']").val();
-		review["title"] = $("form input[name='title']").val();
-		review["body"] = $("form textarea[name='body']").val();
+		review["title"] = escape($("form input[name='title']").val());
+		review["body"] = escape($("form textarea[name='body']").val());
 		console.log(review);
 		editReview(gamekey, userkey, review);
 		return false;
@@ -385,10 +385,10 @@ function editReview(gamekey, userkey, reviewIn) {
 		html += reviewIn["rating"] + " / 5 <br />";
 	}
 	if(reviewIn["title"]) {
-		html += "<h4>" + reviewIn["title"] + "</h4>";
+		html += "<h4>" + unescape(reviewIn["title"]) + "</h4>";
 	}
 	if(reviewIn["body"]) {
-		html += reviewIn["body"];
+		html += unescape(reviewIn["body"]);
 	}
 	html += "<div id=\"" + reviewid + "-json\" style=\"display:none\">" + JSON.stringify(reviewIn) + "</div>";
 
