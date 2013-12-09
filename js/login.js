@@ -2,7 +2,7 @@ var HTML_nav_acct_dropdown = "\
 <li class='dropdown-header'>\
 	Accounts\
 </li><li>\
-	<a id='fblogin' href=\"#\"><img class='dropdown-icon' src='images/icon/facebook.png' />Facebook<span style='float:right;'>#fb_login_stat</span></a>\
+	<a id='fblogin' href=\"#\"><img class='dropdown-icon' src='images/icon/facebook.png' />Facebook&nbsp;&nbsp;&nbsp;&nbsp;#fb_login_stat</a>\
 </li>";
 
 $(document).ready(function() {

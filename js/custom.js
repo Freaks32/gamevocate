@@ -90,7 +90,7 @@ function likeGenre(genrekey) {
 				$("#genre-" + genrekey + "-likebtn").addClass("genre-like-btn-sel");
 				$("#genre-" + genrekey + "-likebtn").attr("onclick", "unlikeGenre(" + genrekey + ")");
 			} else {
-				alert("Operation Failed");
+				notify(result["message"]);
 			}
 		});
 }
@@ -109,7 +109,7 @@ var params = {};
 				$("#genre-" + genrekey + "-likebtn").removeClass("genre-like-btn-sel");
 				$("#genre-" + genrekey + "-likebtn").attr("onclick", "likeGenre(" + genrekey + ")");
 			} else {
-				alert("Operation Failed");
+				notify(result["message"]);
 			}
 		});
 }
@@ -366,7 +366,7 @@ function deleteReview(gamekey, userkey) {
 						}
 					});
 				} else {
-					alert("Error Deleting Review");
+					notify(result["message"]);
 				}
 				$(".loading").hide();
 			});
@@ -416,6 +416,8 @@ function editReview(gamekey, userkey, reviewIn) {
 				$("#" + reviewid + "-body").html(html);
 				$("#" + reviewid + "-editbtn").show();
 				$("#" + reviewid + "-deletebtn").show();
+			} else {
+				notify(result['message']);
 			}
 			$(".loading").hide();
 		});
@@ -476,7 +478,7 @@ function pushRating(gamekey, rating) {
 			var result = $.parseJSON(response);
 			console.log(result);
 			if(!result['success']) {
-				alert("Error while pushing Rating");
+				notify(result['message']);
 			} else {
 				loadRating(gamekey);
 			}
@@ -509,7 +511,7 @@ function pushReview(gamekey, title, body) {
 			var result = $.parseJSON(response);
 			console.log(result);
 			if(!result['success']) {
-				alert("Error while pushing Review");
+				notify(result['message']);
 			}
 			$(".loading").addClass("hidden");
 		});
@@ -545,8 +547,19 @@ function pushFullReview(gamekey, userkey, rating, title, body) {
 			var result = $.parseJSON(response);
 			console.log(result);
 			if(!result['success']) {
-				alert("Error while pushing Full Review");
+				notify(result['message']);
 			}
 			$(".loading").addClass("hidden");
 		});
+}
+
+/* Notification Function */
+
+function notify(message) {
+	var n = $(".notification-container");
+	n.hide();
+	n.stop();
+	n.html("<b>" + message + "</b>");
+	n.show('fade');
+	n.delay(1500).hide('fade');
 }
