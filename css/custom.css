@@ -681,3 +681,32 @@
 	height:35px;
 	background-color:#000000;
 }
+
+.game-view-review-body > img {
+	max-width:250px;
+	max-height:250px;
+}
+@media screen and (min-width: 635px) {
+	.game-view-review-body > img {
+		max-width:560px;
+		max-height:315px;
+	}
+}
+@media screen and (min-width: 945px) {
+	.game-view-review-body > img {
+		max-width:870px;
+		max-height:490px;
+	}
+}
+@media screen and (min-width: 1245px) {
+	.game-view-review-body > img {
+		max-width:780px;
+		max-height:439px;
+	}
+}
+@media screen and (min-width: 1655px) {
+	.game-view-review-body > img {
+		max-width:1110px;
+		max-height:624px;
+	}
+}
