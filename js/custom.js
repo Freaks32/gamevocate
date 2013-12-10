@@ -12,7 +12,6 @@ function refreshGameList() {
 		function(response) {
 			var html = "";
 			var result = $.parseJSON(response);
-			console.log(result);
 			for(var i = 0; i < result["games"].length; i++) {
 				var gamekey = result["games"][i]["gamekey"];
 				var ratingmaskwidth = 100 - (result["games"][i]["avgrating"] * 20.0);
@@ -57,9 +56,7 @@ function refreshGenreList() {
 	$.post("php/query.php",
 		params,
 		function(response) {
-			console.log(response);
 			var result = $.parseJSON(response);
-			console.log(result);
 			var html = "";
 			for(var i = 0; i < result["genres"].length; i++) {
 				var genre = result["genres"][i];
@@ -83,9 +80,7 @@ function likeGenre(genrekey) {
 	$.post("php/push.php",
 		params,
 		function(response) {
-			console.log(response);
 			var result = $.parseJSON(response);
-			console.log(result);
 			if(result["success"]) {
 				$("#genre-" + genrekey + "-likebtn").addClass("genre-like-btn-sel");
 				$("#genre-" + genrekey + "-likebtn").attr("onclick", "unlikeGenre(" + genrekey + ")");
@@ -102,9 +97,7 @@ var params = {};
 	$.post("php/push.php",
 		params,
 		function(response) {
-			console.log(response);
 			var result = $.parseJSON(response);
-			console.log(result);
 			if(result["success"]) {
 				$("#genre-" + genrekey + "-likebtn").removeClass("genre-like-btn-sel");
 				$("#genre-" + genrekey + "-likebtn").attr("onclick", "likeGenre(" + genrekey + ")");
@@ -170,7 +163,6 @@ function viewGame(id) {
 		function(response) {
 			var html = "";
 			var result = $.parseJSON(response);
-			console.log(result);
 			html += "<div class=\"game-view-header\">";
 			html += "<div class=\"game-view-icon\"></div>";
 			html += "<div class=\"game-view-closebutton\" onclick=\"closeGame()\"></div>";
@@ -340,7 +332,6 @@ function showEditReview(gamekey, userkey) {
 		body.find('a').remove();
 		body.find('iframe').remove();
 		review["body"] = escape(body.html());
-		console.log(review);
 		editReview(gamekey, userkey, review);
 		return false;
 	});
@@ -364,7 +355,6 @@ function deleteReview(gamekey, userkey) {
 		$.post("php/push.php",
 			params,
 			function(response) {
-				console.log(response);
 				var result = $.parseJSON(response);
 				if(result["success"]) {
 					var reviewid = "review-" + gamekey + "-" + userkey;
@@ -425,7 +415,6 @@ function editReview(gamekey, userkey, reviewIn) {
 	$.post("php/push.php",
 		params,
 		function(response) {
-			console.log(response);
 			var result = $.parseJSON(response);
 			if(result['success']) {
 				$("#" + reviewid + "-body").html(html);
@@ -463,7 +452,6 @@ function loadRating(gamekey) {
 		params,
 		function(response) {
 			var result = $.parseJSON(response);
-			console.log(result);
 			var padd = (5 - result['rating']) / 5 * 100;
 			$("#game-rate-" + gamekey).css("padding-right", padd + "%"); 
 		});
@@ -489,9 +477,7 @@ function pushRating(gamekey, rating) {
 	$.post("php/push.php",
 		params,
 		function(response) {
-			console.log(response);
 			var result = $.parseJSON(response);
-			console.log(result);
 			if(!result['success']) {
 				notify(result['message']);
 			} else {
@@ -522,9 +508,7 @@ function pushReview(gamekey, title, body) {
 	$.post("php/push.php",
 		params,
 		function(response) {
-			console.log(response);
 			var result = $.parseJSON(response);
-			console.log(result);
 			if(!result['success']) {
 				notify(result['message']);
 			}
@@ -560,7 +544,6 @@ function pushFullReview(gamekey, userkey, rating, title, body) {
 		params,
 		function(response) {
 			var result = $.parseJSON(response);
-			console.log(result);
 			if(!result['success']) {
 				notify(result['message']);
 			}

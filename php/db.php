@@ -16,7 +16,6 @@ function dbconnect() {
 	}
 	$mysqli = new mysqli($dbhostname, $dbusername, $dbpassword, $dbname);
 	if($mysqli->connect_errno) {
-		die("Failed to connect to database server with Error #" . $mysqli->connect_errno);
 	}
 	return $mysqli;
 }
