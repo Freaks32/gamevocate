@@ -23,7 +23,6 @@ $(document).ready(function() {
 
 function facebookUpdate() {
 	FB.getLoginStatus(function(response) {
-		console.log(response.status);
 		if(response.status == 'connected') {
 			FB.api('/me', function(response) {
 				$("#nav_acct_btn").html(response.name);
@@ -45,12 +44,10 @@ function fbLogin() {
 			var uid = response.authResponse.userID;
 			//var accessToken = response.authResponse.accessToken;
 			FB.api('/me', function(response) {
-				console.log("CREATE ACCOUNT w/ UID = " + uid + " & NAME = " + response.name);
 				createAccount(uid, response.name);
 			});
 			facebookUpdate();
 		} else {
-			alert("A Problem Occurred During Login");
 		}
 	});
 }
@@ -63,8 +60,6 @@ function createAccount(uid, username) {
 	$.post("php/acct.php",
 		params,
 		function(response) {
-			console.log("CREATE ACCOUNT: RESPONSE: " + response);
 			var result = $.parseJSON(response);
-			console.log("CREATE ACCOUNT: RESULT: " + result["success"]);
 	});
 }
