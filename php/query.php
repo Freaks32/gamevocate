@@ -69,7 +69,7 @@ if($_POST) {
 			$i = 0;
 			while($query->fetch()) {
 				if($g_steamappid) {
-					$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
+					$g_image = "http://cdn.edgecast.steamstatic.com/steam/apps/" . $g_steamappid . "/header.jpg";
 				} else if(file_exists("../images/games/" . $gamekey . ".jpg")) {
 					$g_image = "images/games/" . $gamekey . ".jpg";
 				} else {
@@ -98,7 +98,7 @@ if($_POST) {
 				if($i == 0) {
 					$gameinfo["title"] = $g_title;
 					if($g_steamappid) {
-						$g_image = "http://cdn.steampowered.com/v/gfx/apps/" . $g_steamappid . "/header.jpg";
+						$g_image = "http://cdn.edgecast.steamstatic.com/steam/apps/" . $g_steamappid . "/header.jpg";
 					} else if(file_exists("../images/games/" . $gamekey . ".jpg")) {
 						$g_image = "images/games/" . $gamekey . ".jpg";
 					} else {
